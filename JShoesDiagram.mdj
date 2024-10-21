@@ -151,6 +151,7 @@
 											"model": {
 												"$ref": "AAAAAAGSqIgIn8Tve3k="
 											},
+											"visible": false,
 											"font": "Arial;13;0",
 											"left": 461,
 											"top": 678,
@@ -168,7 +169,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 461,
-											"top": 693,
+											"top": 678,
 											"width": 141.33544921875,
 											"height": 13
 										},
@@ -183,7 +184,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 461,
-											"top": 708,
+											"top": 693,
 											"width": 141.33544921875,
 											"height": 13
 										}
@@ -192,7 +193,7 @@
 									"left": 456,
 									"top": 583,
 									"width": 151.33544921875,
-									"height": 143
+									"height": 128
 								}
 							],
 							"font": "Arial;13;0",
@@ -954,7 +955,7 @@
 								"$ref": "AAAAAAGSpWOkr8RmAJ4="
 							},
 							"name": "brand",
-							"type": "string",
+							"type": "enum",
 							"length": 0
 						},
 						{
@@ -974,7 +975,7 @@
 								"$ref": "AAAAAAGSpWOkr8RmAJ4="
 							},
 							"name": "type",
-							"type": "string",
+							"type": "enum",
 							"length": 0
 						},
 						{
@@ -984,7 +985,7 @@
 								"$ref": "AAAAAAGSpWOkr8RmAJ4="
 							},
 							"name": "color",
-							"type": "string",
+							"type": "enum",
 							"length": 0
 						},
 						{

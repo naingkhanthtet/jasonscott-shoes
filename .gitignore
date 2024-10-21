@@ -164,3 +164,4 @@ cython_debug/
 jshoes-venv/
 .$JShoesERD.drawio.bkp
 client/node_modules/
+.github/workflows/
