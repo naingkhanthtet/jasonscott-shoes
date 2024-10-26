@@ -1,10 +1,18 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import "@fontsource/just-me-again-down-here";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "./theme.ts";
+
+createRoot(document.getElementById("root")!).render(
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <StrictMode>
+      <App />
+    </StrictMode>
+  </ThemeProvider>
+);
