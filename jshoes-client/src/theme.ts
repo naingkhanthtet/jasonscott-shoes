@@ -6,7 +6,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Just Me Again Down Here",
-    fontSize: 17,
+    fontSize: 16,
   },
   components: {
     MuiButton: {

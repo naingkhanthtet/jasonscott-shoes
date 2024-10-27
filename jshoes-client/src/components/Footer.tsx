@@ -1,99 +1,74 @@
 import React from "react";
+import { Typography, useMediaQuery, Theme } from "@mui/material";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
 import {
-  Box,
-  Typography,
-  Link,
-  Grid,
-  useMediaQuery,
-  Theme,
-} from "@mui/material";
-import { FooterComponent } from "./CustomComponents/FooterComponents";
+  FooterComponent,
+  FooterContents,
+  FooterReference,
+  FooterTitle,
+  FooterLinkIcons,
+} from "./CustomComponents/FooterComponents";
+import { FlexColumn, FlexRow } from "./CustomComponents/BasicComponents";
+
+const brands: string[] = [
+  "Adidas",
+  "Nike",
+  "Puma",
+  "Crocs",
+  "Sin Pauk",
+  "Skechers",
+  "Timberland",
+];
+
+const informations: string[] = ["Contact Me", "About Me", "Partnerships"];
 
 const Footer: React.FC = () => {
-  // Use media query to detect small screens (mobile devices)
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
   );
 
   return (
     <FooterComponent>
-      <Grid container spacing={4} justifyContent="center">
-        {/* Brands Section */}
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          sx={{ textAlign: isMobile ? "left" : "center" }}
-        >
-          <Typography variant="h6" gutterBottom sx={{ fontFamily: "cursive" }}>
-            Brands
-          </Typography>
-          {[
-            "Adidas",
-            "Nike",
-            "Puma",
-            "Crocs",
-            "Sin Pauk",
-            "Skechers",
-            "Timberland",
-          ].map((brand) => (
-            <Typography key={brand} sx={{ fontFamily: "cursive" }}>
-              {brand}
-            </Typography>
-          ))}
-        </Grid>
-
-        {/* Information Section - Hidden on Mobile */}
-        {!isMobile && (
-          <Grid item xs={12} sm={4}>
-            Information
-            {["Contact Me", "About Me", "Partnerships"].map((info) => (
-              <Typography
-                key={info}
-                sx={{ fontFamily: "cursive", textAlign: "center" }}
-              >
-                {info}
-              </Typography>
+      <FooterContents>
+        <FlexRow>
+          {/* Brands Section */}
+          <FlexColumn>
+            <FooterTitle>Brands</FooterTitle>
+            {brands.map((brand) => (
+              <Typography key={brand}>{brand}</Typography>
             ))}
-          </Grid>
-        )}
+          </FlexColumn>
 
-        {/* Follow Me Section */}
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          sx={{ textAlign: isMobile ? "right" : "center" }}
-        >
-          <Typography variant="h6" gutterBottom sx={{ fontFamily: "cursive" }}>
-            Follow Me
-          </Typography>
-          {["LinkedIn", "GitHub", "YouTube"].map((platform) => (
-            <Typography key={platform} sx={{ fontFamily: "cursive" }}>
-              {platform}
-            </Typography>
-          ))}
-        </Grid>
-      </Grid>
+          {/* Information Section - Hidden on Mobile */}
+          {!isMobile && (
+            <FlexColumn>
+              <FooterTitle>Information</FooterTitle>
+              {informations.map((info) => (
+                <Typography key={info}>{info}</Typography>
+              ))}
+            </FlexColumn>
+          )}
 
-      {/* Footer Bottom Text */}
-      <Box sx={{ textAlign: "center", mt: 4 }}>
-        <Typography sx={{ fontFamily: "cursive" }}>
-          built by{" "}
-          <Link href="https://github.com/naingkhanthtet" color="inherit">
-            naingkhanthtet
-          </Link>{" "}
-          (
-          <Link href="https://www.linkedin.com" color="inherit">
-            GitHub
-          </Link>
-          ) (
-          <Link href="https://www.linkedin.com" color="inherit">
-            LinkedIn
-          </Link>
-          )
-        </Typography>
-      </Box>
+          {/* Follow Me Section */}
+          <FlexColumn>
+            <FooterTitle>Follow Me</FooterTitle>
+            {["LinkedIn", "GitHub", "YouTube"].map((platform) => (
+              <Typography key={platform}>{platform}</Typography>
+            ))}
+          </FlexColumn>
+        </FlexRow>
+
+        {/* Footer Bottom Text */}
+        <FooterReference>
+          built by naingkhanthtet
+          <FooterLinkIcons href="https://www.linkedin.com">
+            <FaGithub />
+          </FooterLinkIcons>
+          <FooterLinkIcons href="https://www.linkedin.com">
+            <FaLinkedin />
+          </FooterLinkIcons>
+        </FooterReference>
+      </FooterContents>
     </FooterComponent>
   );
 };

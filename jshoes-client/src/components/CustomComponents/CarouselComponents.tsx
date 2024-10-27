@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 export const CarouselContainer = styled(Box)({
   position: "relative",
   width: "100%",
-  maxWidth: "1728px",
+  maxWidth: "1920px",
   height: "400px",
   overflow: "hidden",
   margin: "auto",
@@ -32,10 +32,4 @@ export const CarouselLeftNavigator = styled(CarouselNavigator)({
 
 export const CarouselRightNavigator = styled(CarouselNavigator)({
   right: "10px",
-});
-
-export const CarouselImage = styled("img")({
-  width: "100%",
-  height: "100%",
-  objectFit: "cover",
 });

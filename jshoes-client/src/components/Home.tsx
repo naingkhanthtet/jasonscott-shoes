@@ -2,6 +2,7 @@ import Nav from "./Nav";
 import Carousel from "./Carousel";
 import FilterDropdown from "./FilterDropdown";
 import Footer from "./Footer";
+import Shoes from "./Shoes";
 
 const Home: React.FC = () => {
   return (
@@ -9,6 +10,7 @@ const Home: React.FC = () => {
       <Nav />
       <Carousel />
       <FilterDropdown />
+      <Shoes />
       <Footer />
     </>
   );

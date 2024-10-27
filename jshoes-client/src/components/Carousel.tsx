@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
   CarouselContainer,
-  CarouselImage,
   CarouselRightNavigator,
 } from "./CustomComponents/CarouselComponents";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import { CarouselLeftNavigator } from "./CustomComponents/CarouselComponents";
+import { Image } from "./CustomComponents/BasicComponents";
 
 // Sample images for carousel
 const images: string[] = [
@@ -32,10 +32,7 @@ const Carousel: React.FC = () => {
   return (
     <CarouselContainer>
       {/* Carousel images */}
-      <CarouselImage
-        src={images[currentIndex]}
-        alt={`Slide ${currentIndex + 1}`}
-      />
+      <Image src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} />
 
       {/* Left Arrow */}
       <CarouselLeftNavigator onClick={handlePrev}>

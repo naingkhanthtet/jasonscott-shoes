@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import Button, { ButtonProps } from "@mui/material/Button";
 
 export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -12,3 +12,30 @@ export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
     boxShadow: `3px 3px 0px 0px ${theme.palette.text.primary}`,
   },
 }));
+
+export const FlexColumn = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+});
+
+export const FlexRow = styled(Box)({
+  display: "flex",
+  flexDirection: "row",
+  gap: "auto",
+  justifyContent: "space-between",
+});
+
+export const WrapContainer = styled(Box)({
+  padding: "20px",
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "5px",
+  width: "100%",
+  maxWidth: "100%",
+});
+
+export const Image = styled("img")({
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+});

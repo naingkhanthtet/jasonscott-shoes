@@ -19,7 +19,7 @@ export const NavContainer = styled(Box)(({ theme }) => ({
 export const NavContentBox = styled(Box)({
   margin: "auto",
   display: "flex",
-  maxWidth: "1728px",
+  maxWidth: "1920px",
   alignItems: "center",
   justifyContent: "space-between",
 });

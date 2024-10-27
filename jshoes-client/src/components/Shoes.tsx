@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../interceptors/axiosInstance";
+import ShoeCard from "./ShoeCard";
+import { WrapContainer } from "./CustomComponents/BasicComponents";
 
 // Define the type for a Shoe object
 interface Shoe {
   id: number;
   name: string;
-  type: number;
-  image: string;
+  type: string;
+  imageUrl: string;
   price: number;
 }
 
@@ -38,22 +40,17 @@ const Shoes: React.FC = () => {
   }
 
   return (
-    <div className="shoe-list">
-      <div className="shoe-container">
-        {shoes.map((shoe) => (
-          <div key={shoe.id} className="shoe-card">
-            <img
-              // src={`${MEDIA_BASE_URL}${shoe.image}`}
-              src={shoe.image}
-              alt={shoe.name}
-              className="shoe-image"
-            />
-            <h2>{shoe.name}</h2>
-            <p>Price: ${shoe.price}</p>
-          </div>
-        ))}
-      </div>
-    </div>
+    <WrapContainer>
+      {shoes.map((shoe) => (
+        <ShoeCard
+          key={shoe.id}
+          name={shoe.name}
+          type={shoe.type}
+          price={shoe.price}
+          imageUrl={shoe.imageUrl}
+        />
+      ))}
+    </WrapContainer>
   );
 };
 

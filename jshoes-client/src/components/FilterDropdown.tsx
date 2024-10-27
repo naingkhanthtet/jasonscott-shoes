@@ -12,9 +12,9 @@ import {
 import { StyledButton } from "./CustomComponents/BasicComponents";
 import {
   FilterContainer,
-  SelectedContainer,
   SelectedFilterBox,
 } from "./CustomComponents/FilterDropdownComponents";
+import { WrapContainer } from "./CustomComponents/BasicComponents";
 import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
@@ -66,7 +66,7 @@ const FilterDropdown: React.FC = () => {
           },
         }}
       >
-        <SelectedContainer>
+        <WrapContainer>
           Selected:
           {selectedOptions.length > 0 &&
             selectedOptions.map((option) => (
@@ -77,7 +77,7 @@ const FilterDropdown: React.FC = () => {
                 <CloseOutlinedIcon /> {option}
               </SelectedFilterBox>
             ))}
-        </SelectedContainer>
+        </WrapContainer>
 
         {/* Brand Group */}
         <MenuItem onClick={handleToggleBrand} disableRipple>
