@@ -9,11 +9,8 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { StyledButton } from "./CustomComponents/BasicComponents";
-import {
-  FilterContainer,
-  SelectedFilterBox,
-} from "./CustomComponents/FilterDropdownComponents";
+import { ContentWidth, StyledButton } from "./CustomComponents/BasicComponents";
+import { SelectedFilterBox } from "./CustomComponents/FilterDropdownComponents";
 import { WrapContainer } from "./CustomComponents/BasicComponents";
 import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
@@ -48,7 +45,11 @@ const FilterDropdown: React.FC = () => {
   const isOptionSelected = (option: string) => selectedOptions.includes(option);
 
   return (
-    <FilterContainer>
+    <ContentWidth
+      sx={{
+        padding: "20px",
+      }}
+    >
       {/* Button to open dropdown menu */}
       <StyledButton onClick={handleMenuOpen} disableRipple>
         Filter
@@ -125,7 +126,7 @@ const FilterDropdown: React.FC = () => {
           </List>
         </Collapse>
       </Menu>
-    </FilterContainer>
+    </ContentWidth>
   );
 };
 

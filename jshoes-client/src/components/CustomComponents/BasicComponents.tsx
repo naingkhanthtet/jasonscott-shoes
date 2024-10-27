@@ -29,8 +29,8 @@ export const WrapContainer = styled(Box)({
   padding: "20px",
   display: "flex",
   flexWrap: "wrap",
-  gap: "5px",
   width: "100%",
+  gap: "10px",
   maxWidth: "100%",
 });
 
@@ -38,4 +38,10 @@ export const Image = styled("img")({
   width: "100%",
   height: "100%",
   objectFit: "cover",
+});
+
+export const ContentWidth = styled(Box)({
+  display: "flex",
+  margin: "auto",
+  maxWidth: "1920px",
 });

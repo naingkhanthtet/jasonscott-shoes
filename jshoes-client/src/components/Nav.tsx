@@ -5,9 +5,8 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { NavContainer } from "./CustomComponents/NavComponents";
-import { NavContentBox } from "./CustomComponents/NavComponents";
-import { NavText } from "./CustomComponents/NavComponents";
+import { NavContainer, NavText } from "./CustomComponents/NavComponents";
+import { ContentWidth } from "./CustomComponents/BasicComponents";
 import Logo from "./Logo";
 
 const Nav: React.FC = () => {
@@ -15,7 +14,11 @@ const Nav: React.FC = () => {
 
   return (
     <NavContainer>
-      <NavContentBox>
+      <ContentWidth
+        sx={{
+          justifyContent: "space-between",
+        }}
+      >
         <NavText>
           <Logo />
           {bigScreenSize && "Jason Scott Shoes"}
@@ -27,7 +30,7 @@ const Nav: React.FC = () => {
           <ShoppingCartOutlinedIcon />
           <PersonOutlineOutlinedIcon />
         </NavText>
-      </NavContentBox>
+      </ContentWidth>
     </NavContainer>
   );
 };

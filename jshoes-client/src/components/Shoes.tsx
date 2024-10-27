@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../interceptors/axiosInstance";
 import ShoeCard from "./ShoeCard";
-import { WrapContainer } from "./CustomComponents/BasicComponents";
+import {
+  ContentWidth,
+  StyledButton,
+  WrapContainer,
+} from "./CustomComponents/BasicComponents";
 
-// Define the type for a Shoe object
 interface Shoe {
   id: number;
   name: string;
   type: string;
-  imageUrl: string;
+  image: string;
   price: number;
 }
 
@@ -16,6 +19,7 @@ const Shoes: React.FC = () => {
   const [shoes, setShoes] = useState<Shoe[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [visibleShoe, setVisibleShoes] = useState<number>(5);
 
   useEffect(() => {
     axiosInstance
@@ -31,6 +35,14 @@ const Shoes: React.FC = () => {
       });
   }, []);
 
+  const loadMore = () => {
+    setVisibleShoes((prev) => prev + 5);
+  };
+
+  const loadLess = () => {
+    setVisibleShoes((prev) => prev - 5);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -40,17 +52,37 @@ const Shoes: React.FC = () => {
   }
 
   return (
-    <WrapContainer>
-      {shoes.map((shoe) => (
-        <ShoeCard
-          key={shoe.id}
-          name={shoe.name}
-          type={shoe.type}
-          price={shoe.price}
-          imageUrl={shoe.imageUrl}
-        />
-      ))}
-    </WrapContainer>
+    <>
+      <ContentWidth>
+        <WrapContainer
+          sx={{
+            justifyContent: "space-between",
+            gap: "20px",
+          }}
+        >
+          {shoes.slice(0, visibleShoe).map((shoe) => (
+            <ShoeCard
+              key={shoe.id}
+              name={shoe.name}
+              type={shoe.type}
+              price={shoe.price}
+              imageUrl={shoe.image}
+            />
+          ))}
+        </WrapContainer>
+      </ContentWidth>
+      <ContentWidth
+        sx={{
+          justifyContent: "center",
+        }}
+      >
+        {visibleShoe < shoes.length ? (
+          <StyledButton onClick={loadMore}>Load More</StyledButton>
+        ) : (
+          <StyledButton onClick={loadLess}>Load Less</StyledButton>
+        )}
+      </ContentWidth>
+    </>
   );
 };
 

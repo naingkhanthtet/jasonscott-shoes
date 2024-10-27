@@ -10,10 +10,9 @@ import { Image } from "./CustomComponents/BasicComponents";
 
 // Sample images for carousel
 const images: string[] = [
-  "https://assets.adidas.com/videos/f220f9e2fa8043eea6880ef93d460236_d98c/IE8503_HM1.jpg",
-  "https://assets.adidas.com/videos/15916575e46f466284535b45488d0b28_d98c/HQ4204_HM1.jpg",
-  "https://assets.adidas.com/videos/9f7117a8670d4798ad3a058c076fc05d_d98c/IE4956_HM1.jpg",
-  // "https://imgnike-a.akamaihd.net/1920x1920/02538551.jpg",
+  "/images/Gazalle.jpg",
+  "/images/Samba.jpg",
+  "/images/Ultraboost.jpg",
 ];
 
 const Carousel: React.FC = () => {

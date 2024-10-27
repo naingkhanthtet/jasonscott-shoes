@@ -1,11 +1,4 @@
-import { Box, Button, styled } from "@mui/material";
-
-export const FilterContainer = styled(Box)({
-  margin: "auto",
-  display: "flex",
-  maxWidth: "1920px",
-  padding: "20px",
-});
+import { Button, styled } from "@mui/material";
 
 export const SelectedFilterBox = styled(Button)(({ theme }) => ({
   color: theme.palette.text.primary,
