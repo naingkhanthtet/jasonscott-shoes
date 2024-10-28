@@ -6,7 +6,7 @@ export const SelectedFilterBox = styled(Button)(({ theme }) => ({
   padding: "2px",
   display: "flex",
   alignItems: "center",
-  gap: "4px",
+  gap: "5px",
   maxWidth: "100%",
   minWidth: "fit-content",
   overflow: "hidden",

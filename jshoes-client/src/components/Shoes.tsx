@@ -10,12 +10,18 @@ import {
 interface Shoe {
   id: number;
   name: string;
+  brand: string;
+  color: string;
   type: string;
-  image: string;
   price: number;
+  image: string;
 }
 
-const Shoes: React.FC = () => {
+interface ShoesProps {
+  selectedOptions: string[];
+}
+
+const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
   const [shoes, setShoes] = useState<Shoe[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +40,13 @@ const Shoes: React.FC = () => {
         setLoading(false);
       });
   }, []);
+
+  const filteredShoes = shoes.filter((shoe) =>
+    selectedOptions.every(
+      (option) =>
+        shoe.brand === option || shoe.color === option || shoe.type === option
+    )
+  );
 
   const loadMore = () => {
     setVisibleShoes((prev) => prev + 5);
@@ -60,7 +73,7 @@ const Shoes: React.FC = () => {
             gap: "20px",
           }}
         >
-          {shoes.slice(0, visibleShoe).map((shoe) => (
+          {filteredShoes.slice(0, visibleShoe).map((shoe) => (
             <ShoeCard
               key={shoe.id}
               name={shoe.name}

@@ -6,7 +6,7 @@ export const ShoeCardBox = styled(Box)(({ theme }) => ({
   color: theme.palette.text.primary,
   backgroundColor: theme.palette.background.paper,
   border: `1px solid ${theme.palette.text.primary}`,
-  padding: "10px",
+  padding: "5px",
   boxShadow: `1px 1px 0px 0px ${theme.palette.text.primary}`,
   cursor: "pointer",
   transition: "box-shadow 0.2s ease",

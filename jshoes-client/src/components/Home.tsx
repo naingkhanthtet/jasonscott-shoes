@@ -1,16 +1,14 @@
 import Nav from "./Nav";
 import Carousel from "./Carousel";
-import FilterDropdown from "./FilterDropdown";
 import Footer from "./Footer";
-import Shoes from "./Shoes";
+import FilteredShoeList from "./FilteredShoeList";
 
 const Home: React.FC = () => {
   return (
     <>
       <Nav />
       <Carousel />
-      <FilterDropdown />
-      <Shoes />
+      <FilteredShoeList />
       <Footer />
     </>
   );

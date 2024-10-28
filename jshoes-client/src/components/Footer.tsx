@@ -9,16 +9,7 @@ import {
   FooterLinkIcons,
 } from "./CustomComponents/FooterComponents";
 import { FlexColumn, FlexRow } from "./CustomComponents/BasicComponents";
-
-const brands: string[] = [
-  "Adidas",
-  "Nike",
-  "Puma",
-  "Crocs",
-  "Sin Pauk",
-  "Skechers",
-  "Timberland",
-];
+import brands from "../assets/brands";
 
 const informations: string[] = ["Contact Me", "About Me", "Partnerships"];
 
