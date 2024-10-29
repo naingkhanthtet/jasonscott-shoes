@@ -24,8 +24,8 @@ export const PaginationDropdown = styled(Select)(({ theme }) => ({
   padding: "5px",
   marginLeft: "10px",
   marginRight: "10px",
-  minWidth: "70px",
+  maxWidth: "70px",
   border: `1px solid ${theme.palette.text.primary}`,
   borderRadius: "none",
-  height: "fit-content",
+  maxHeight: "40px",
 }));

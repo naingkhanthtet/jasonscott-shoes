@@ -1,23 +1,15 @@
 import React, { useState, useCallback } from "react";
-import {
-  Collapse,
-  List,
-  ListItemText,
-  Drawer,
-  IconButton,
-  ListItemButton,
-} from "@mui/material";
+import { Drawer, IconButton } from "@mui/material";
 import { ContentWidth, StyledButton } from "./CustomComponents/BasicComponents";
 import { SelectedFilterBox } from "./CustomComponents/FilterComponents";
 import { WrapContainer } from "./CustomComponents/BasicComponents";
-import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
-import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import brands from "../assets/brands";
 import colors from "../assets/colors";
 import types from "../assets/types";
-import FilterOptionItem from "./FilterOptionItem";
+import genders from "../assets/gender";
+import FilterSelections from "./FilterSelections";
 
 interface FilterDrawerProps {
   selectedOptions: string[];
@@ -51,6 +43,13 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
     [selectedOptions]
   );
 
+  const sections = [
+    { name: "Brand", options: brands },
+    { name: "Gender", options: genders },
+    { name: "Color", options: colors },
+    { name: "Type", options: types },
+  ];
+
   return (
     <ContentWidth sx={{ padding: "20px" }}>
       {/* Button to open the filter drawer */}
@@ -65,7 +64,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         open={openDrawer}
         onClose={handleDrawerClose}
         PaperProps={{
-          style: { width: "400px", padding: "20px" },
+          style: { width: "350px", padding: "20px" },
         }}
       >
         <IconButton
@@ -90,57 +89,16 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         </WrapContainer>
 
         {/* Selections */}
-        {["Brand", "Gender", "Color", "Type"].map((section) => (
-          <div key={section}>
-            <ListItemButton onClick={() => handleToggleSection(section)}>
-              {openSections[section] ? (
-                <ExpandLessOutlinedIcon />
-              ) : (
-                <ExpandMoreOutlinedIcon />
-              )}
-              <ListItemText primary={section} />
-            </ListItemButton>
-            <Collapse in={openSections[section]} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {section === "Brand" &&
-                  brands.map((brand) => (
-                    <FilterOptionItem
-                      key={brand}
-                      label={brand}
-                      isChecked={isOptionSelected(brand)}
-                      onChange={() => handleOptionChange(brand)}
-                    />
-                  ))}
-                {section === "Gender" &&
-                  ["M", "F"].map((gender) => (
-                    <FilterOptionItem
-                      key={gender}
-                      label={gender}
-                      isChecked={isOptionSelected(gender)}
-                      onChange={() => handleOptionChange(gender)}
-                    />
-                  ))}
-                {section === "Color" &&
-                  colors.map((color) => (
-                    <FilterOptionItem
-                      key={color}
-                      label={color}
-                      isChecked={isOptionSelected(color)}
-                      onChange={() => handleOptionChange(color)}
-                    />
-                  ))}
-                {section === "Type" &&
-                  types.map((type) => (
-                    <FilterOptionItem
-                      key={type}
-                      label={type}
-                      isChecked={isOptionSelected(type)}
-                      onChange={() => handleOptionChange(type)}
-                    />
-                  ))}
-              </List>
-            </Collapse>
-          </div>
+        {sections.map(({ name, options }) => (
+          <FilterSelections
+            key={name}
+            section={name}
+            options={options}
+            isOpen={openSections[name]}
+            onToggle={() => handleToggleSection(name)}
+            isOptionSelected={isOptionSelected}
+            onOptionChange={handleOptionChange}
+          />
         ))}
       </Drawer>
     </ContentWidth>
