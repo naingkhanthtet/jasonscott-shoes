@@ -9,12 +9,11 @@ import { FlexColumn, FlexRow, Image } from "./CustomComponents/BasicComponents";
 
 interface ShoeCardProps {
   name: string;
-  type: string;
   price: number;
   imageUrl: string;
 }
 
-const ShoeCard: React.FC<ShoeCardProps> = ({ name, type, price, imageUrl }) => {
+const ShoeCard: React.FC<ShoeCardProps> = ({ name, price, imageUrl }) => {
   return (
     <ShoeCardBox>
       <ShoeCardImageBox>
@@ -24,7 +23,7 @@ const ShoeCard: React.FC<ShoeCardProps> = ({ name, type, price, imageUrl }) => {
       <FlexRow>
         <FlexColumn>
           <Typography variant="h6">{name}</Typography>
-          <Typography>{type}</Typography>
+          {/* <Typography>{type}</Typography> */}
           <Typography>${price}</Typography>
         </FlexColumn>
         <FlexColumn>

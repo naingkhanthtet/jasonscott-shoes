@@ -3,14 +3,16 @@ import axiosInstance from "../interceptors/axiosInstance";
 import ShoeCard from "./ShoeCard";
 import {
   ContentWidth,
-  StyledButton,
   WrapContainer,
 } from "./CustomComponents/BasicComponents";
+import { PaginationDropdown } from "./CustomComponents/ShoeComponents";
+import { MenuItem } from "@mui/material";
 
 interface Shoe {
   id: number;
   name: string;
   brand: string;
+  gender: string;
   color: string;
   type: string;
   price: number;
@@ -25,7 +27,8 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
   const [shoes, setShoes] = useState<Shoe[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [visibleShoe, setVisibleShoes] = useState<number>(5);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10; // Number of items to display per page
 
   useEffect(() => {
     axiosInstance
@@ -41,20 +44,26 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
       });
   }, []);
 
-  const filteredShoes = shoes.filter((shoe) =>
-    selectedOptions.every(
-      (option) =>
-        shoe.brand === option || shoe.color === option || shoe.type === option
-    )
+  // Filter shoes based on selected options
+  const filteredShoes =
+    selectedOptions.length === 0
+      ? shoes
+      : shoes.filter((shoe) =>
+          selectedOptions.some(
+            (option) =>
+              shoe.brand === option ||
+              shoe.color === option ||
+              shoe.type === option ||
+              shoe.gender === option
+          )
+        );
+
+  const totalPages = Math.ceil(filteredShoes.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentShoes = filteredShoes.slice(
+    startIndex,
+    startIndex + itemsPerPage
   );
-
-  const loadMore = () => {
-    setVisibleShoes((prev) => prev + 5);
-  };
-
-  const loadLess = () => {
-    setVisibleShoes((prev) => prev - 5);
-  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -69,15 +78,20 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
       <ContentWidth>
         <WrapContainer
           sx={{
-            justifyContent: "space-between",
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "repeat(2, 1fr)", // 2 cards in a row on small devices
+              sm: "repeat(3, 1fr)", // 3 cards in a row on medium devices
+              lg: "repeat(5, 1fr)", // 4 cards in a row on large devices
+            },
             gap: "20px",
+            justifyItems: "center",
           }}
         >
-          {filteredShoes.slice(0, visibleShoe).map((shoe) => (
+          {currentShoes.map((shoe) => (
             <ShoeCard
               key={shoe.id}
               name={shoe.name}
-              type={shoe.type}
               price={shoe.price}
               imageUrl={shoe.image}
             />
@@ -87,13 +101,24 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
       <ContentWidth
         sx={{
           justifyContent: "center",
+          display: "flex",
+          gap: "10px",
         }}
       >
-        {visibleShoe < shoes.length ? (
-          <StyledButton onClick={loadMore}>Load More</StyledButton>
-        ) : (
-          <StyledButton onClick={loadLess}>Load Less</StyledButton>
-        )}
+        <span>
+          Page
+          <PaginationDropdown
+            value={currentPage}
+            onChange={(e) => setCurrentPage(Number(e.target.value))}
+          >
+            {Array.from({ length: totalPages }, (_, index) => (
+              <MenuItem key={index + 1} value={index + 1}>
+                {index + 1}
+              </MenuItem>
+            ))}
+          </PaginationDropdown>
+          of {totalPages}
+        </span>
       </ContentWidth>
     </>
   );

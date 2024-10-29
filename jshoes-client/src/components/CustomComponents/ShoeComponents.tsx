@@ -1,8 +1,8 @@
-import { styled, Box } from "@mui/material";
+import { styled, Box, Select } from "@mui/material";
 
 export const ShoeCardBox = styled(Box)(({ theme }) => ({
-  width: "160px",
-  height: "300px",
+  width: "100%",
+  height: "100%",
   color: theme.palette.text.primary,
   backgroundColor: theme.palette.background.paper,
   border: `1px solid ${theme.palette.text.primary}`,
@@ -17,5 +17,15 @@ export const ShoeCardBox = styled(Box)(({ theme }) => ({
 
 export const ShoeCardImageBox = styled(Box)({
   width: "100%",
-  height: "150px",
+  height: "70%",
 });
+
+export const PaginationDropdown = styled(Select)(({ theme }) => ({
+  padding: "5px",
+  marginLeft: "10px",
+  marginRight: "10px",
+  minWidth: "70px",
+  border: `1px solid ${theme.palette.text.primary}`,
+  borderRadius: "none",
+  height: "fit-content",
+}));
