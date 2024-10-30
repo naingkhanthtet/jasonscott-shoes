@@ -1,5 +1,5 @@
 import React from "react";
-import { useMediaQuery, IconButton } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
@@ -33,17 +33,28 @@ const Nav: React.FC<NavProps> = ({ onToggleTheme, mode }) => {
           </NavText>
         </Link>
         <NavText>
-          <SearchShoes />
-          <IconButton onClick={onToggleTheme} color="inherit" disableRipple>
+          <div>
+            <SearchShoes />
+          </div>
+          <div onClick={onToggleTheme}>
             {mode === "dark" ? (
               <LightModeOutlinedIcon />
             ) : (
               <DarkModeOutlinedIcon />
             )}
-          </IconButton>
-          <FavoriteBorderOutlinedIcon />
-          <ShoppingCartOutlinedIcon />
-          <PersonOutlineOutlinedIcon />
+          </div>
+          <Link
+            to={"/favorite"}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <FavoriteBorderOutlinedIcon />
+          </Link>
+          <div>
+            <ShoppingCartOutlinedIcon />
+          </div>
+          <div>
+            <PersonOutlineOutlinedIcon />
+          </div>
         </NavText>
       </ContentWidth>
     </NavContainer>

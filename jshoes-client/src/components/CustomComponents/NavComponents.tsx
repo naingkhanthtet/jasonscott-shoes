@@ -25,6 +25,7 @@ export const NavContentBox = styled(Box)({
 });
 
 export const NavText = styled(Box)({
+  cursor: "pointer",
   fontSize: "2rem",
   display: "flex",
   justifyContent: "space-between",

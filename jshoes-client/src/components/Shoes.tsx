@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../interceptors/axiosInstance";
-import { Link } from "react-router-dom";
 import ShoeCard from "./ShoeCard";
 import {
   ContentWidth,
@@ -85,18 +84,13 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
           }}
         >
           {currentShoes.map((shoe) => (
-            <Link
-              to={`/shoes/${shoe.id}`}
-              style={{ textDecoration: "none", width: "inherit" }}
+            <ShoeCard
               key={shoe.id}
-            >
-              <ShoeCard
-                key={shoe.id}
-                name={shoe.name}
-                price={shoe.price}
-                imageUrl={shoe.image}
-              />
-            </Link>
+              id={shoe.id}
+              name={shoe.name}
+              price={shoe.price}
+              imageUrl={shoe.image}
+            />
           ))}
         </WrapContainer>
       </ContentWidth>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../interceptors/axiosInstance";
-import { Typography, IconButton, Box } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import {
   ContentWidth,
   FlexRow,
@@ -10,8 +10,8 @@ import {
   StyledButton,
 } from "./CustomComponents/BasicComponents";
 import { ShoeDetailContainer } from "./CustomComponents/ShoeComponents";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import BackHome from "./BackHome";
+import FavoriteButton from "./FavoriteButton";
 
 interface Shoe {
   id: number;
@@ -83,9 +83,12 @@ const ShoeDetail: React.FC = () => {
                 <Typography>{shoe.stock} stocks left</Typography>
                 <FlexRow>
                   <StyledButton>Add to Cart</StyledButton>
-                  <IconButton>
-                    <FavoriteBorderOutlinedIcon />
-                  </IconButton>
+                  <FavoriteButton
+                    id={shoe.id}
+                    name={shoe.name}
+                    price={shoe.price}
+                    imageUrl={shoe.image}
+                  />
                 </FlexRow>
               </div>
             </FlexColumn>
