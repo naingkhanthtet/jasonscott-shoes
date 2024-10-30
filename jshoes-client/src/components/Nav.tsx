@@ -1,6 +1,7 @@
 import React from "react";
-import { useMediaQuery } from "@mui/material";
+import { useMediaQuery, IconButton } from "@mui/material";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
@@ -8,8 +9,14 @@ import { NavContainer, NavText } from "./CustomComponents/NavComponents";
 import { ContentWidth } from "./CustomComponents/BasicComponents";
 import Logo from "./Logo";
 import SearchShoes from "./SearchShoes";
+import { Link } from "react-router-dom";
 
-const Nav: React.FC = () => {
+interface NavProps {
+  onToggleTheme: () => void;
+  mode: "light" | "dark";
+}
+
+const Nav: React.FC<NavProps> = ({ onToggleTheme, mode }) => {
   const bigScreenSize = useMediaQuery("(min-width:600px)");
 
   return (
@@ -19,13 +26,21 @@ const Nav: React.FC = () => {
           justifyContent: "space-between",
         }}
       >
-        <NavText>
-          <Logo />
-          {bigScreenSize && "Jason Scott Shoes"}
-        </NavText>
+        <Link to={"/"} style={{ textDecoration: "none", color: "inherit" }}>
+          <NavText>
+            <Logo />
+            {bigScreenSize && "Jason Scott Shoes"}
+          </NavText>
+        </Link>
         <NavText>
           <SearchShoes />
-          <DarkModeOutlinedIcon />
+          <IconButton onClick={onToggleTheme} color="inherit" disableRipple>
+            {mode === "dark" ? (
+              <LightModeOutlinedIcon />
+            ) : (
+              <DarkModeOutlinedIcon />
+            )}
+          </IconButton>
           <FavoriteBorderOutlinedIcon />
           <ShoppingCartOutlinedIcon />
           <PersonOutlineOutlinedIcon />

@@ -10,10 +10,8 @@ import {
   StyledButton,
 } from "./CustomComponents/BasicComponents";
 import { ShoeDetailContainer } from "./CustomComponents/ShoeComponents";
-import Footer from "./Footer";
-import { Link } from "react-router-dom";
-import Nav from "./Nav";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import BackHome from "./BackHome";
 
 interface Shoe {
   id: number;
@@ -52,12 +50,7 @@ const ShoeDetail: React.FC = () => {
 
   return (
     <>
-      <Nav />
-      <ContentWidth sx={{ padding: "20px" }}>
-        <Link to={"/"} style={{ textDecoration: "none", color: "inherit" }}>
-          <Typography variant="h5">&lt;-Back</Typography>
-        </Link>
-      </ContentWidth>
+      <BackHome />
       <ContentWidth sx={{ padding: "20px" }}>
         {shoe && (
           <ShoeDetailContainer>
@@ -99,7 +92,6 @@ const ShoeDetail: React.FC = () => {
           </ShoeDetailContainer>
         )}
       </ContentWidth>
-      <Footer />
     </>
   );
 };

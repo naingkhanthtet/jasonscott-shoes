@@ -52,10 +52,10 @@ const Footer: React.FC = () => {
         {/* Footer Bottom Text */}
         <FooterReference>
           built by naingkhanthtet
-          <FooterLinkIcons href="https://www.linkedin.com">
+          <FooterLinkIcons href="https://github.com/naingkhanthtet/jasonscott-shoes">
             <FaGithub />
           </FooterLinkIcons>
-          <FooterLinkIcons href="https://www.linkedin.com">
+          <FooterLinkIcons href="https://www.linkedin.com/in/naing-khant-htet-446311227/">
             <FaLinkedin />
           </FooterLinkIcons>
         </FooterReference>
