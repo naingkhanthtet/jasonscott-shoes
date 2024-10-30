@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../interceptors/axiosInstance";
+import { Link } from "react-router-dom";
 import ShoeCard from "./ShoeCard";
 import {
   ContentWidth,
@@ -65,13 +66,8 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
     startIndex + itemsPerPage
   );
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <>
@@ -80,21 +76,27 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "repeat(2, 1fr)", // 2 cards in a row on small devices
-              sm: "repeat(3, 1fr)", // 3 cards in a row on medium devices
-              lg: "repeat(5, 1fr)", // 4 cards in a row on large devices
+              xs: "repeat(2, 1fr)",
+              sm: "repeat(3, 1fr)",
+              lg: "repeat(5, 1fr)",
             },
             gap: "20px",
             justifyItems: "center",
           }}
         >
           {currentShoes.map((shoe) => (
-            <ShoeCard
+            <Link
+              to={`/shoes/${shoe.id}`}
+              style={{ textDecoration: "none", width: "inherit" }}
               key={shoe.id}
-              name={shoe.name}
-              price={shoe.price}
-              imageUrl={shoe.image}
-            />
+            >
+              <ShoeCard
+                key={shoe.id}
+                name={shoe.name}
+                price={shoe.price}
+                imageUrl={shoe.image}
+              />
+            </Link>
           ))}
         </WrapContainer>
       </ContentWidth>

@@ -26,6 +26,20 @@ export const PaginationDropdown = styled(Select)(({ theme }) => ({
   marginRight: "10px",
   maxWidth: "70px",
   border: `1px solid ${theme.palette.text.primary}`,
-  borderRadius: "none",
+  borderRadius: "0px",
   maxHeight: "40px",
+  outline: "none",
+}));
+
+export const ShoeDetailContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "row",
+  width: "100%",
+  border: `1px solid ${theme.palette.text.primary}`,
+  padding: "50px",
+  [theme.breakpoints.down("sm")]: {
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "10px",
+  },
 }));

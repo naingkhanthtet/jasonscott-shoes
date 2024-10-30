@@ -1,14 +1,17 @@
 import React, { useState, useCallback } from "react";
 import { Drawer, IconButton } from "@mui/material";
-import { ContentWidth, StyledButton } from "./CustomComponents/BasicComponents";
-import { SelectedFilterBox } from "./CustomComponents/FilterComponents";
-import { WrapContainer } from "./CustomComponents/BasicComponents";
+import {
+  ContentWidth,
+  StyledButton,
+} from "../CustomComponents/BasicComponents";
+import { SelectedFilterBox } from "../CustomComponents/FilterComponents";
+import { WrapContainer } from "../CustomComponents/BasicComponents";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import brands from "../assets/brands";
-import colors from "../assets/colors";
-import types from "../assets/types";
-import genders from "../assets/gender";
+import brands from "../../assets/brands";
+import colors from "../../assets/colors";
+import types from "../../assets/types";
+import genders from "../../assets/gender";
 import FilterSelections from "./FilterSelections";
 
 interface FilterDrawerProps {
@@ -64,7 +67,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         open={openDrawer}
         onClose={handleDrawerClose}
         PaperProps={{
-          style: { width: "350px", padding: "20px" },
+          style: { width: "300px", padding: "20px" },
         }}
       >
         <IconButton
