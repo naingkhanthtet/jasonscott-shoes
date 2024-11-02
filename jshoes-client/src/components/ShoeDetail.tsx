@@ -7,13 +7,12 @@ import {
   FlexRow,
   FlexColumn,
   Image,
-  StyledButton,
 } from "./CustomComponents/BasicComponents";
 import { ShoeDetailContainer } from "./CustomComponents/ShoeComponents";
 import BackHome from "./BackHome";
 import FavoriteButton from "./FavoriteButton";
-import Cookies from "js-cookie";
 import Shoe from "./Shoe";
+import CartButton from "./CartButton";
 
 const ShoeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,27 +34,13 @@ const ShoeDetail: React.FC = () => {
       });
   }, [id]);
 
-  const handleAddToCart = () => {
-    if (shoe) {
-      // Get current cart from cookies
-      const existingCart = Cookies.get("cart");
-      const cart = existingCart ? JSON.parse(existingCart) : [];
-
-      // Add the current shoe to the cart
-      const updatedCart = [...cart, shoe];
-      Cookies.set("cart", JSON.stringify(updatedCart), { expires: 7 }); // Expires in 7 days
-
-      alert("Item added to cart!");
-    }
-  };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <>
       <BackHome />
-      <ContentWidth sx={{ padding: "20px" }}>
+      <ContentWidth>
         {shoe && (
           <ShoeDetailContainer>
             <Box
@@ -86,9 +71,17 @@ const ShoeDetail: React.FC = () => {
                 </Typography>
                 <Typography>{shoe.stock} stocks left</Typography>
                 <FlexRow>
-                  <StyledButton onClick={handleAddToCart}>
-                    Add to Cart
-                  </StyledButton>
+                  <CartButton
+                    id={shoe.id}
+                    name={shoe.name}
+                    brand={shoe.brand}
+                    color={shoe.color}
+                    type={shoe.type}
+                    price={shoe.price}
+                    gender={shoe.gender}
+                    image={shoe.image}
+                    stock={shoe.stock}
+                  />
                   <FavoriteButton
                     id={shoe.id}
                     name={shoe.name}

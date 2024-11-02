@@ -26,7 +26,6 @@ export const FlexRow = styled(Box)({
 });
 
 export const WrapContainer = styled(Box)({
-  padding: "20px",
   display: "flex",
   flexWrap: "wrap",
   width: "100%",
@@ -44,4 +43,5 @@ export const ContentWidth = styled(Box)({
   display: "flex",
   margin: "auto",
   maxWidth: "1920px",
+  padding: "20px",
 });

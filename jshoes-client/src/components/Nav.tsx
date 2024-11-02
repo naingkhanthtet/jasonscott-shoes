@@ -24,6 +24,7 @@ const Nav: React.FC<NavProps> = ({ onToggleTheme, mode }) => {
       <ContentWidth
         sx={{
           justifyContent: "space-between",
+          padding: "0",
         }}
       >
         <Link to={"/"} style={{ textDecoration: "none", color: "inherit" }}>

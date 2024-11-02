@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const BackHome: React.FC = () => {
   return (
-    <ContentWidth sx={{ padding: "20px" }}>
+    <ContentWidth>
       <Link to={"/"} style={{ textDecoration: "none", color: "inherit" }}>
         <Typography variant="h5">&lt;-Back</Typography>
       </Link>

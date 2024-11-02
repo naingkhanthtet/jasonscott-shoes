@@ -17,39 +17,37 @@ const FavoritePage: React.FC = () => {
   return (
     <>
       <BackHome />
-      <ContentWidth
-        sx={{
-          padding: "20px",
-        }}
-      >
+      <ContentWidth>
         <Typography variant="h4">Your favorite shoes</Typography>
       </ContentWidth>
-      <WrapContainer
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "repeat(2, 1fr)",
-            sm: "repeat(3, 1fr)",
-            lg: "repeat(5, 1fr)",
-          },
-          gap: "20px",
-          justifyItems: "center",
-        }}
-      >
-        {favoriteShoes.length > 0 ? (
-          favoriteShoes.map((shoe) => (
-            <ShoeCard
-              key={shoe.id}
-              id={shoe.id}
-              name={shoe.name}
-              price={shoe.price}
-              image={shoe.image}
-            />
-          ))
-        ) : (
-          <Typography variant="h5">No favorites yet.</Typography>
-        )}
-      </WrapContainer>
+      <ContentWidth>
+        <WrapContainer
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "repeat(2, 1fr)",
+              sm: "repeat(3, 1fr)",
+              lg: "repeat(5, 1fr)",
+            },
+            gap: "20px",
+            justifyItems: "center",
+          }}
+        >
+          {favoriteShoes.length > 0 ? (
+            favoriteShoes.map((shoe) => (
+              <ShoeCard
+                key={shoe.id}
+                id={shoe.id}
+                name={shoe.name}
+                price={shoe.price}
+                image={shoe.image}
+              />
+            ))
+          ) : (
+            <Typography variant="h5">No favorites yet.</Typography>
+          )}
+        </WrapContainer>
+      </ContentWidth>
     </>
   );
 };
