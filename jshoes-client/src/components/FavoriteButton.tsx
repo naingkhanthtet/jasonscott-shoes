@@ -8,14 +8,14 @@ interface FavoriteButtonProps {
   id: number;
   name: string;
   price: number;
-  imageUrl: string;
+  image: string;
 }
 
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   id,
   name,
   price,
-  imageUrl,
+  image,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -36,7 +36,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
         (shoe: FavoriteButtonProps) => shoe.id !== id
       );
     } else {
-      updatedFavorites = [...favorites, { id, name, price, imageUrl }];
+      updatedFavorites = [...favorites, { id, name, price, image }];
     }
 
     Cookies.set("favorites", JSON.stringify(updatedFavorites), { expires: 7 });

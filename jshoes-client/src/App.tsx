@@ -8,6 +8,7 @@ import ShoeDetail from "./components/ShoeDetail";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import FavoritePage from "./components/FavoritePage";
+import CartPage from "./components/CartPage";
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<"light" | "dark">(
@@ -32,6 +33,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/shoes/:id" element={<ShoeDetail />} />
           <Route path="/favorite" element={<FavoritePage />} />
+          <Route path="/cart" element={<CartPage />} />
         </Routes>
 
         <Footer />

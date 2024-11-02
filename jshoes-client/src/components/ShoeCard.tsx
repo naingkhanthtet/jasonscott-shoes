@@ -12,19 +12,18 @@ interface ShoeCardProps {
   id: number;
   name: string;
   price: number;
-  imageUrl: string;
+  image: string;
 }
 
-const ShoeCard: React.FC<ShoeCardProps> = ({ id, name, price, imageUrl }) => {
+const ShoeCard: React.FC<ShoeCardProps> = ({ id, name, price, image }) => {
   return (
     <ShoeCardBox key={id}>
       <Link
         to={`/shoes/${id}`}
         style={{ textDecoration: "none", color: "inherit" }}
-        key={id}
       >
         <ShoeCardImageBox>
-          <Image src={imageUrl} alt={name} />
+          <Image src={image} alt={name} />
         </ShoeCardImageBox>
       </Link>
 
@@ -32,7 +31,6 @@ const ShoeCard: React.FC<ShoeCardProps> = ({ id, name, price, imageUrl }) => {
         <Link
           to={`/shoes/${id}`}
           style={{ textDecoration: "none", color: "inherit", width: "80%" }}
-          key={id}
         >
           <FlexColumn>
             <Typography variant="h6">{name}</Typography>
@@ -40,12 +38,7 @@ const ShoeCard: React.FC<ShoeCardProps> = ({ id, name, price, imageUrl }) => {
           </FlexColumn>
         </Link>
         <FlexColumn>
-          <FavoriteButton
-            id={id}
-            name={name}
-            price={price}
-            imageUrl={imageUrl}
-          />
+          <FavoriteButton id={id} name={name} price={price} image={image} />
         </FlexColumn>
       </FlexRow>
     </ShoeCardBox>

@@ -49,9 +49,12 @@ const Nav: React.FC<NavProps> = ({ onToggleTheme, mode }) => {
           >
             <FavoriteBorderOutlinedIcon />
           </Link>
-          <div>
+          <Link
+            to={"/cart"}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
             <ShoppingCartOutlinedIcon />
-          </div>
+          </Link>
           <div>
             <PersonOutlineOutlinedIcon />
           </div>

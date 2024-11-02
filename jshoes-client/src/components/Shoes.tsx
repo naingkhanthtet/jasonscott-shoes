@@ -89,7 +89,7 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
               id={shoe.id}
               name={shoe.name}
               price={shoe.price}
-              imageUrl={shoe.image}
+              image={shoe.image}
             />
           ))}
         </WrapContainer>

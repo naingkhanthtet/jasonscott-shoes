@@ -12,18 +12,8 @@ import {
 import { ShoeDetailContainer } from "./CustomComponents/ShoeComponents";
 import BackHome from "./BackHome";
 import FavoriteButton from "./FavoriteButton";
-
-interface Shoe {
-  id: number;
-  name: string;
-  brand: string;
-  color: string;
-  type: string;
-  price: number;
-  image: string;
-  gender: string;
-  stock: number;
-}
+import Cookies from "js-cookie";
+import Shoe from "./Shoe";
 
 const ShoeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -44,6 +34,20 @@ const ShoeDetail: React.FC = () => {
         setLoading(false);
       });
   }, [id]);
+
+  const handleAddToCart = () => {
+    if (shoe) {
+      // Get current cart from cookies
+      const existingCart = Cookies.get("cart");
+      const cart = existingCart ? JSON.parse(existingCart) : [];
+
+      // Add the current shoe to the cart
+      const updatedCart = [...cart, shoe];
+      Cookies.set("cart", JSON.stringify(updatedCart), { expires: 7 }); // Expires in 7 days
+
+      alert("Item added to cart!");
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -82,12 +86,14 @@ const ShoeDetail: React.FC = () => {
                 </Typography>
                 <Typography>{shoe.stock} stocks left</Typography>
                 <FlexRow>
-                  <StyledButton>Add to Cart</StyledButton>
+                  <StyledButton onClick={handleAddToCart}>
+                    Add to Cart
+                  </StyledButton>
                   <FavoriteButton
                     id={shoe.id}
                     name={shoe.name}
                     price={shoe.price}
-                    imageUrl={shoe.image}
+                    image={shoe.image}
                   />
                 </FlexRow>
               </div>

@@ -5,13 +5,7 @@ import { ContentWidth } from "./CustomComponents/BasicComponents";
 import { WrapContainer } from "./CustomComponents/BasicComponents";
 import ShoeCard from "./ShoeCard";
 import Cookies from "js-cookie";
-
-interface Shoe {
-  id: number;
-  name: string;
-  price: number;
-  imageUrl: string;
-}
+import Shoe from "./Shoe";
 
 const FavoritePage: React.FC = () => {
   const [favoriteShoes, setFavoriteShoes] = useState<Shoe[]>([]);
@@ -49,7 +43,7 @@ const FavoritePage: React.FC = () => {
               id={shoe.id}
               name={shoe.name}
               price={shoe.price}
-              imageUrl={shoe.imageUrl}
+              image={shoe.image}
             />
           ))
         ) : (
