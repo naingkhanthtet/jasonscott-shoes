@@ -31,10 +31,11 @@ const CartButton: React.FC<Shoe> = ({
         ...cartItems,
         { id, name, price, brand, color, type, image },
       ];
-      alert("Added to cart");
     }
 
     Cookies.set("cart", JSON.stringify(updatedCartItems), { expires: 7 });
+    // Dispatch the custom event to notify of cart changes
+    window.dispatchEvent(new Event("cartUpdated"));
     setIsCart(!isCart);
   };
 

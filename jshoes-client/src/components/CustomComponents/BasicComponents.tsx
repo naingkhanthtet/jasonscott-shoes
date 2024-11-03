@@ -41,7 +41,7 @@ export const Image = styled("img")({
 
 export const ContentWidth = styled(Box)({
   display: "flex",
+  padding: "20px",
   margin: "auto",
   maxWidth: "1920px",
-  padding: "20px",
 });

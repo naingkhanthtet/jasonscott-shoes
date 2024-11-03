@@ -21,20 +21,20 @@ const FavoritePage: React.FC = () => {
         <Typography variant="h4">Your favorite shoes</Typography>
       </ContentWidth>
       <ContentWidth>
-        <WrapContainer
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "repeat(2, 1fr)",
-              sm: "repeat(3, 1fr)",
-              lg: "repeat(5, 1fr)",
-            },
-            gap: "20px",
-            justifyItems: "center",
-          }}
-        >
-          {favoriteShoes.length > 0 ? (
-            favoriteShoes.map((shoe) => (
+        {favoriteShoes.length > 0 ? (
+          <WrapContainer
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "repeat(2, 1fr)",
+                sm: "repeat(3, 1fr)",
+                lg: "repeat(5, 1fr)",
+              },
+              gap: "20px",
+              justifyItems: "center",
+            }}
+          >
+            {favoriteShoes.map((shoe) => (
               <ShoeCard
                 key={shoe.id}
                 id={shoe.id}
@@ -42,11 +42,11 @@ const FavoritePage: React.FC = () => {
                 price={shoe.price}
                 image={shoe.image}
               />
-            ))
-          ) : (
-            <Typography variant="h5">No favorites yet.</Typography>
-          )}
-        </WrapContainer>
+            ))}
+          </WrapContainer>
+        ) : (
+          <Typography variant="h5">No favorites yet.</Typography>
+        )}
       </ContentWidth>
     </>
   );

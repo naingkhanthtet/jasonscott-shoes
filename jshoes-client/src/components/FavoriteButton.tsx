@@ -40,6 +40,8 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     }
 
     Cookies.set("favorites", JSON.stringify(updatedFavorites), { expires: 7 });
+
+    window.dispatchEvent(new Event("favoritesUpdated"));
     setIsFavorite(!isFavorite);
   };
 
