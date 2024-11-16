@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axiosInstance from "../interceptors/axiosInstance";
+import axiosInstance from "../../interceptors/axiosInstance";
 import { Typography, Box } from "@mui/material";
 import {
   ContentWidth,
   FlexRow,
   FlexColumn,
   Image,
-} from "./CustomComponents/BasicComponents";
-import { ShoeDetailContainer } from "./CustomComponents/ShoeComponents";
-import BackHome from "./BackHome";
-import FavoriteButton from "./FavoriteButton";
-import Shoe from "./Shoe";
-import CartButton from "./CartButton";
+} from "../CustomComponents/BasicComponents";
+import { ShoeDetailContainer } from "../CustomComponents/ShoeComponents";
+import BackHome from "../pages/BackHome";
+import FavoriteButton from "../Buttons/FavoriteButton";
+import Shoe from "../../types/Shoe";
+import CartButton from "../Buttons/CartButton";
 
 const ShoeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

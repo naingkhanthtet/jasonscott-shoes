@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import Shoe from "./Shoe";
+import Shoe from "../../types/Shoe";
 import BackHome from "./BackHome";
 import {
   ContentWidth,
@@ -8,11 +8,11 @@ import {
   FlexColumn,
   FlexRow,
   StyledButton,
-} from "./CustomComponents/BasicComponents";
+} from "../CustomComponents/BasicComponents";
 import { Typography, Box, IconButton, Select, MenuItem } from "@mui/material";
-import { CartShoeBox } from "./CustomComponents/CartComponents";
+import { CartShoeBox } from "../CustomComponents/CartComponents";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import FavoriteButton from "./FavoriteButton";
+import FavoriteButton from "../Buttons/FavoriteButton";
 import { Link } from "react-router-dom";
 
 const CartPage: React.FC = () => {

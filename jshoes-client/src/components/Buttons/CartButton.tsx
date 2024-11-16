@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import Shoe from "./Shoe";
-import { StyledButton } from "./CustomComponents/BasicComponents";
+import Shoe from "../../types/Shoe";
+import { StyledButton } from "../CustomComponents/BasicComponents";
 
 const CartButton: React.FC<Shoe> = ({
   id,

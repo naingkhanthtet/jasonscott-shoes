@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import BackHome from "./BackHome";
 import { Typography } from "@mui/material";
-import { ContentWidth } from "./CustomComponents/BasicComponents";
-import { WrapContainer } from "./CustomComponents/BasicComponents";
-import ShoeCard from "./ShoeCard";
+import { ContentWidth } from "../CustomComponents/BasicComponents";
+import { WrapContainer } from "../CustomComponents/BasicComponents";
+import ShoeCard from "../Shoe/ShoeCard";
 import Cookies from "js-cookie";
-import Shoe from "./Shoe";
+import Shoe from "../../types/Shoe";
 
 const FavoritePage: React.FC = () => {
   const [favoriteShoes, setFavoriteShoes] = useState<Shoe[]>([]);

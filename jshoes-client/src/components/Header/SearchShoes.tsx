@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axiosInstance from "../interceptors/axiosInstance";
+import axiosInstance from "../../interceptors/axiosInstance";
 import { SearchOutlined } from "@mui/icons-material";
 import {
   Drawer,
@@ -9,7 +9,10 @@ import {
   ListItemText,
 } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { SearchField, SearchResult } from "./CustomComponents/SearchComponents";
+import {
+  SearchField,
+  SearchResult,
+} from "../CustomComponents/SearchComponents";
 
 interface Shoe {
   id: number;

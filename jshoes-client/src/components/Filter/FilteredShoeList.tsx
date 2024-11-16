@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import FilterDrawer from "./FilterDrawer";
-import Shoes from "../Shoes";
+import Shoes from "../Shoe/Shoes";
 
 const FilteredShoeList: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);

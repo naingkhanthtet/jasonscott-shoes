@@ -1,5 +1,5 @@
 import React from "react";
-import { ContentWidth } from "./CustomComponents/BasicComponents";
+import { ContentWidth } from "../CustomComponents/BasicComponents";
 import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 

@@ -9,8 +9,8 @@ import {
   NavContainer,
   NavSpace,
   NavText,
-} from "./CustomComponents/NavComponents";
-import { ContentWidth, FlexColumn } from "./CustomComponents/BasicComponents";
+} from "../CustomComponents/NavComponents";
+import { ContentWidth, FlexColumn } from "../CustomComponents/BasicComponents";
 import Logo from "./Logo";
 import SearchShoes from "./SearchShoes";
 import { Link } from "react-router-dom";

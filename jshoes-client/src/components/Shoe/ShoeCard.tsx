@@ -3,10 +3,14 @@ import { Typography } from "@mui/material";
 import {
   ShoeCardBox,
   ShoeCardImageBox,
-} from "./CustomComponents/ShoeComponents";
-import { FlexColumn, FlexRow, Image } from "./CustomComponents/BasicComponents";
+} from "../CustomComponents/ShoeComponents";
+import {
+  FlexColumn,
+  FlexRow,
+  Image,
+} from "../CustomComponents/BasicComponents";
 import { Link } from "react-router-dom";
-import FavoriteButton from "./FavoriteButton";
+import FavoriteButton from "../Buttons/FavoriteButton";
 
 interface ShoeCardProps {
   id: number;

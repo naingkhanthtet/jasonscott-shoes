@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../interceptors/axiosInstance";
+import axiosInstance from "../../interceptors/axiosInstance";
 import ShoeCard from "./ShoeCard";
 import {
   ContentWidth,
   WrapContainer,
-} from "./CustomComponents/BasicComponents";
-import { PaginationDropdown } from "./CustomComponents/ShoeComponents";
+} from "../CustomComponents/BasicComponents";
+import { PaginationDropdown } from "../CustomComponents/ShoeComponents";
 import { MenuItem } from "@mui/material";
 
 interface Shoe {

@@ -3,13 +3,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Cookies from "js-cookie";
 import theme from "./theme";
-import Home from "./components/Home";
-import ShoeDetail from "./components/ShoeDetail";
-import Nav from "./components/Nav";
-import Footer from "./components/Footer";
-import FavoritePage from "./components/FavoritePage";
-import CartPage from "./components/CartPage";
-import CheckoutPage from "./components/CheckoutPage";
+import Home from "./components/pages/Home";
+import ShoeDetail from "./components/Shoe/ShoeDetail";
+import Nav from "./components/Header/Nav";
+import Footer from "./components/Footer/Footer";
+import FavoritePage from "./components/pages/FavoritePage";
+import CartPage from "./components/pages/CartPage";
+import CheckoutPage from "./components/Form/CheckoutPage";
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<"light" | "dark">(

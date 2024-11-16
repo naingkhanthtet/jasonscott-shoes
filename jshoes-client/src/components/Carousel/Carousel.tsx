@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import {
   CarouselContainer,
   CarouselRightNavigator,
-} from "./CustomComponents/CarouselComponents";
+} from "../CustomComponents/CarouselComponents";
 import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
-import { CarouselLeftNavigator } from "./CustomComponents/CarouselComponents";
-import { Image } from "./CustomComponents/BasicComponents";
+import { CarouselLeftNavigator } from "../CustomComponents/CarouselComponents";
+import { Image } from "../CustomComponents/BasicComponents";
 
 // Sample images for carousel
 const images: string[] = [

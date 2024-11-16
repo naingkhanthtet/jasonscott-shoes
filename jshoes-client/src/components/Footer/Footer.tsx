@@ -7,9 +7,9 @@ import {
   FooterReference,
   FooterTitle,
   FooterLinkIcons,
-} from "./CustomComponents/FooterComponents";
-import { FlexColumn, FlexRow } from "./CustomComponents/BasicComponents";
-import brands from "../assets/brands";
+} from "../CustomComponents/FooterComponents";
+import { FlexColumn, FlexRow } from "../CustomComponents/BasicComponents";
+import brands from "../../assets/brands";
 
 const informations: string[] = ["Contact Me", "About Me", "Partnerships"];
 

@@ -1,5 +1,5 @@
-import Carousel from "./Carousel";
-import FilteredShoeList from "./FilterFunction/FilteredShoeList";
+import Carousel from "../Carousel/Carousel";
+import FilteredShoeList from "../Filter/FilteredShoeList";
 
 const Home: React.FC = () => {
   return (
