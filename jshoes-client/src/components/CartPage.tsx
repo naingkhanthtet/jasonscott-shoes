@@ -13,6 +13,7 @@ import { Typography, Box, IconButton, Select, MenuItem } from "@mui/material";
 import { CartShoeBox } from "./CustomComponents/CartComponents";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import FavoriteButton from "./FavoriteButton";
+import { Link } from "react-router-dom";
 
 const CartPage: React.FC = () => {
   const [cartShoes, setCartShoes] = useState<Shoe[]>([]);
@@ -172,7 +173,21 @@ const CartPage: React.FC = () => {
                 <Typography>Total Price</Typography>
                 <Typography>${totalPrice}</Typography>
               </FlexRow>
-              <StyledButton>Checkout</StyledButton>
+              <Link
+                to={"/checkout"}
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                }}
+              >
+                <StyledButton
+                  sx={{
+                    width: "100%",
+                  }}
+                >
+                  Checkout
+                </StyledButton>
+              </Link>
             </FlexColumn>
           </>
         ) : (
