@@ -9,7 +9,7 @@ import Nav from "./components/Header/Nav";
 import Footer from "./components/Footer/Footer";
 import FavoritePage from "./components/pages/FavoritePage";
 import CartPage from "./components/pages/CartPage";
-import CheckoutPage from "./components/Form/CheckoutPage";
+import CheckoutPage from "./components/pages/CheckoutPage";
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<"light" | "dark">(
