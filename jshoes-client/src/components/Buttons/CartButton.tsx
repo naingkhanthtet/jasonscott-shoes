@@ -29,7 +29,7 @@ const CartButton: React.FC<Shoe> = ({
     } else {
       updatedCartItems = [
         ...cartItems,
-        { id, name, price, brand, color, type, image },
+        { id, name, price, brand, color, type, image, quantity: 1 },
       ];
     }
 
