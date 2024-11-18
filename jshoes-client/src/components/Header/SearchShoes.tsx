@@ -13,16 +13,7 @@ import {
   SearchField,
   SearchResult,
 } from "../CustomComponents/SearchComponents";
-
-interface Shoe {
-  id: number;
-  name: string;
-  brand: string;
-  color: string;
-  type: string;
-  price: number;
-  image: string;
-}
+import Shoe from "../../types/Shoe";
 
 const SearchShoes: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");

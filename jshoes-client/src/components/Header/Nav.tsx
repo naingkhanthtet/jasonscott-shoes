@@ -4,7 +4,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+// import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import {
   NavContainer,
   NavSpace,
@@ -15,6 +15,7 @@ import Logo from "./Logo";
 import SearchShoes from "./SearchShoes";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import User from "./User";
 
 interface NavProps {
   onToggleTheme: () => void;
@@ -108,7 +109,7 @@ const Nav: React.FC<NavProps> = ({ onToggleTheme, mode }) => {
               </Badge>
             </Link>
             <div>
-              <PersonOutlineOutlinedIcon />
+              <User />
             </div>
           </NavText>
         </ContentWidth>
