@@ -151,9 +151,10 @@ const CheckoutForm: React.FC = () => {
 
         {/* Payment Option */}
         <StyledSelect
+          label="Payment Option"
+          name="paymentOption"
           fullWidth
           displayEmpty
-          name="paymentOption"
           value={formik.values.paymentOption}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
