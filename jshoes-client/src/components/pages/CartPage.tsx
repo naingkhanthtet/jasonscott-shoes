@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import Shoe from "../../types/Shoe";
-import BackHome from "./BackHome";
 import {
   ContentWidth,
   Image,
@@ -9,6 +6,9 @@ import {
   FlexRow,
   StyledButton,
 } from "../CustomComponents/BasicComponents";
+import Shoe from "../../types/Shoe";
+import Cookies from "js-cookie";
+import BackHome from "./BackHome";
 import { Typography, Box, IconButton, Select, MenuItem } from "@mui/material";
 import { CartShoeBox } from "../CustomComponents/CartComponents";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -17,54 +17,40 @@ import { Link } from "react-router-dom";
 
 const CartPage: React.FC = () => {
   const [cartShoes, setCartShoes] = useState<Shoe[]>([]);
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
+  // Load cart shoes from cookies
   useEffect(() => {
     const carts = JSON.parse(Cookies.get("cart") || "[]");
     setCartShoes(carts);
-
-    const savedQuantities = JSON.parse(Cookies.get("quantities") || "{}");
-    const initialQuantities = carts.reduce(
-      (acc: { [key: string]: number }, shoe: Shoe) => {
-        acc[shoe.id] = savedQuantities[shoe.id] || 1;
-        return acc;
-      },
-      {}
-    );
-    setQuantities(initialQuantities);
   }, []);
 
   // Calculate total price based on quantities
   useEffect(() => {
     const newTotalPrice = cartShoes.reduce((sum, shoe) => {
-      const quantity = quantities[shoe.id] || 1;
-      return sum + shoe.price * quantity;
+      return sum + shoe.price * (shoe.quantity || 1);
     }, 0);
     setTotalPrice(newTotalPrice);
-  }, [cartShoes, quantities]);
+  }, [cartShoes]);
 
   const handleRemoveShoe = (id: number) => {
     const updatedCartShoes = cartShoes.filter((shoe) => shoe.id !== id);
     setCartShoes(updatedCartShoes);
-    Cookies.set("cart", JSON.stringify(updatedCartShoes)); // Update cookie
+    Cookies.set("cart", JSON.stringify(updatedCartShoes));
 
-    // Remove cookies quantity when cart item is removed
-    const updatedQuantities = { ...quantities };
-    delete updatedQuantities[id];
-    setQuantities(updatedQuantities);
+    // Dispatch an event to update the cart in other components
     window.dispatchEvent(new Event("cartUpdated"));
-    Cookies.set("quantities", JSON.stringify(updatedQuantities));
   };
 
-  // Function to handle quantity change
   const handleQuantityChange = (id: number, quantity: number) => {
-    const updatedQuantities = {
-      ...quantities,
-      [id]: quantity,
-    };
-    setQuantities(updatedQuantities);
-    Cookies.set("quantities", JSON.stringify(updatedQuantities));
+    const updatedCartShoes = cartShoes.map((shoe) =>
+      shoe.id === id ? { ...shoe, quantity } : shoe
+    );
+    setCartShoes(updatedCartShoes);
+    Cookies.set("cart", JSON.stringify(updatedCartShoes));
+
+    // Dispatch an event to update the cart in other components
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   return (
@@ -114,7 +100,7 @@ const CartPage: React.FC = () => {
                       {cartShoe.brand}, {cartShoe.type}, {cartShoe.color}
                     </Typography>
                     <Typography variant="h5">
-                      ${cartShoe.price * (quantities[cartShoe.id] || 1)}
+                      ${(cartShoe.price * (cartShoe.quantity || 1)).toFixed(2)}
                     </Typography>
                   </FlexColumn>
 
@@ -130,7 +116,7 @@ const CartPage: React.FC = () => {
                       image={cartShoe.image}
                     />
                     <Select
-                      value={quantities[cartShoe.id] || 1}
+                      value={cartShoe.quantity || 1}
                       onChange={(e) =>
                         handleQuantityChange(
                           cartShoe.id,
@@ -166,7 +152,7 @@ const CartPage: React.FC = () => {
               <FlexRow>
                 <Typography>Total Items</Typography>
                 <Typography>
-                  {Object.values(quantities).reduce((acc, qty) => acc + qty, 0)}
+                  {/* {Object.values(quantities).reduce((acc, qty) => acc + qty, 0)} */}
                 </Typography>
               </FlexRow>
               <FlexRow>
@@ -174,7 +160,7 @@ const CartPage: React.FC = () => {
                 <Typography>${totalPrice}</Typography>
               </FlexRow>
               <Link
-                to={"/checkout"}
+                to="/checkout"
                 style={{
                   textDecoration: "none",
                   color: "inherit",
