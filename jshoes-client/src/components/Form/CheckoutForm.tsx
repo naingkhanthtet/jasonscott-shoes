@@ -40,8 +40,22 @@ const CheckoutForm: React.FC = () => {
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
+          error={
+            formik.touched.email && formik.dirty && Boolean(formik.errors.email)
+          }
+          helperText={
+            formik.touched.email && formik.dirty && formik.errors.email
+          }
+          /*
+          error={
+              formik.touched.email &&
+              formik.dirty &&
+              Boolean(formik.errors.email)
+            }
+            helperText={
+              formik.touched.email && formik.dirty && formik.dirty && formik.errors.email
+            }
+          */
         />
 
         {/* First Name */}
@@ -52,8 +66,14 @@ const CheckoutForm: React.FC = () => {
           value={formik.values.firstName}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-          helperText={formik.touched.firstName && formik.errors.firstName}
+          error={
+            formik.touched.firstName &&
+            formik.dirty &&
+            Boolean(formik.errors.firstName)
+          }
+          helperText={
+            formik.touched.firstName && formik.dirty && formik.errors.firstName
+          }
         />
 
         {/* Last Name */}
@@ -64,8 +84,14 @@ const CheckoutForm: React.FC = () => {
           value={formik.values.lastName}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-          helperText={formik.touched.lastName && formik.errors.lastName}
+          error={
+            formik.touched.lastName &&
+            formik.dirty &&
+            Boolean(formik.errors.lastName)
+          }
+          helperText={
+            formik.touched.lastName && formik.dirty && formik.errors.lastName
+          }
         />
 
         {/* Division */}
@@ -76,8 +102,14 @@ const CheckoutForm: React.FC = () => {
           value={formik.values.division}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.division && Boolean(formik.errors.division)}
-          helperText={formik.touched.division && formik.errors.division}
+          error={
+            formik.touched.division &&
+            formik.dirty &&
+            Boolean(formik.errors.division)
+          }
+          helperText={
+            formik.touched.division && formik.dirty && formik.errors.division
+          }
         />
 
         {/* City */}
@@ -88,8 +120,10 @@ const CheckoutForm: React.FC = () => {
           value={formik.values.city}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.city && Boolean(formik.errors.city)}
-          helperText={formik.touched.city && formik.errors.city}
+          error={
+            formik.touched.city && formik.dirty && Boolean(formik.errors.city)
+          }
+          helperText={formik.touched.city && formik.dirty && formik.errors.city}
         />
 
         {/* Country */}
@@ -100,8 +134,14 @@ const CheckoutForm: React.FC = () => {
           value={formik.values.country}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.country && Boolean(formik.errors.country)}
-          helperText={formik.touched.country && formik.errors.country}
+          error={
+            formik.touched.country &&
+            formik.dirty &&
+            Boolean(formik.errors.country)
+          }
+          helperText={
+            formik.touched.country && formik.dirty && formik.errors.country
+          }
         />
 
         {/* Address Line 1 */}
@@ -113,9 +153,15 @@ const CheckoutForm: React.FC = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={
-            formik.touched.addressLine1 && Boolean(formik.errors.addressLine1)
+            formik.touched.addressLine1 &&
+            formik.dirty &&
+            Boolean(formik.errors.addressLine1)
           }
-          helperText={formik.touched.addressLine1 && formik.errors.addressLine1}
+          helperText={
+            formik.touched.addressLine1 &&
+            formik.dirty &&
+            formik.errors.addressLine1
+          }
         />
 
         {/* Address Line 2 */}
@@ -127,9 +173,15 @@ const CheckoutForm: React.FC = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={
-            formik.touched.addressLine2 && Boolean(formik.errors.addressLine2)
+            formik.touched.addressLine2 &&
+            formik.dirty &&
+            Boolean(formik.errors.addressLine2)
           }
-          helperText={formik.touched.addressLine2 && formik.errors.addressLine2}
+          helperText={
+            formik.touched.addressLine2 &&
+            formik.dirty &&
+            formik.errors.addressLine2
+          }
         />
 
         {/* Optional Address */}
@@ -145,7 +197,9 @@ const CheckoutForm: React.FC = () => {
             Boolean(formik.errors.optionalAddress)
           }
           helperText={
-            formik.touched.optionalAddress && formik.errors.optionalAddress
+            formik.touched.optionalAddress &&
+            formik.dirty &&
+            formik.errors.optionalAddress
           }
         />
 
@@ -159,7 +213,9 @@ const CheckoutForm: React.FC = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={
-            formik.touched.paymentOption && Boolean(formik.errors.paymentOption)
+            formik.touched.paymentOption &&
+            formik.dirty &&
+            Boolean(formik.errors.paymentOption)
           }
         >
           <MenuItem value="" disabled>
@@ -169,11 +225,13 @@ const CheckoutForm: React.FC = () => {
           <MenuItem value="paypal">PayPal</MenuItem>
           <MenuItem value="cash">Cash on Delivery</MenuItem>
         </StyledSelect>
-        {formik.touched.paymentOption && formik.errors.paymentOption && (
-          <Typography color="error" variant="caption">
-            {formik.errors.paymentOption}
-          </Typography>
-        )}
+        {formik.touched.paymentOption &&
+          formik.dirty &&
+          formik.errors.paymentOption && (
+            <Typography color="error" variant="caption">
+              {formik.errors.paymentOption}
+            </Typography>
+          )}
 
         {/* Submit Button */}
         <StyledButton fullWidth sx={{ marginTop: 3 }}>

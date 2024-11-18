@@ -81,6 +81,7 @@ const ShoeDetail: React.FC = () => {
                     gender={shoe.gender}
                     image={shoe.image}
                     stock={shoe.stock}
+                    quantity={1}
                   />
                   <FavoriteButton
                     id={shoe.id}

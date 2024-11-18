@@ -4,12 +4,16 @@ import { Drawer, IconButton } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import RegisterForm from "../Form/RegisterForm";
+import LoginForm from "../Form/LoginForm";
 
 const User: React.FC = () => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [isRegistering, setIsRegistering] = useState<boolean>(false);
 
   const handleIconClick = () => setOpenDrawer(true);
   const handleCloseClick = () => setOpenDrawer(false);
+
+  const toggleUserSwitch = () => setIsRegistering(!isRegistering);
 
   return (
     <>
@@ -38,7 +42,11 @@ const User: React.FC = () => {
         >
           <CloseOutlinedIcon />
         </IconButton>
-        <RegisterForm />
+        {isRegistering ? (
+          <RegisterForm onToggleUser={toggleUserSwitch} />
+        ) : (
+          <LoginForm onToggleUser={toggleUserSwitch} />
+        )}
       </Drawer>
     </>
   );
