@@ -4,7 +4,7 @@ import { ContentWidth, FlexColumn } from "../CustomComponents/BasicComponents";
 import CheckoutForm from "../Form/CheckoutForm";
 import Shoe from "../../types/Shoe";
 import Cookies from "js-cookie";
-import CheckoutDetails from "./CheckoutDetails";
+import CheckoutSummary from "./CheckoutSummary";
 
 const CheckoutPage: React.FC = () => {
   const [cartShoes, setCartShoes] = useState<Shoe[]>([]);
@@ -42,7 +42,7 @@ const CheckoutPage: React.FC = () => {
               gap: "20px",
             }}
           >
-            <CheckoutDetails />
+            <CheckoutSummary />
           </FlexColumn>
         </ContentWidth>
       ) : (

@@ -9,7 +9,7 @@ import Shoe from "../../types/Shoe";
 import Cookies from "js-cookie";
 import { CartShoeBox } from "../CustomComponents/CartComponents";
 
-const CheckoutDetails: React.FC = () => {
+const CheckoutSummary: React.FC = () => {
   const [cartShoes, setCartShoes] = useState<Shoe[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalQuantity, setTotalQuantity] = useState<number>(0);
@@ -85,4 +85,4 @@ const CheckoutDetails: React.FC = () => {
   );
 };
 
-export default CheckoutDetails;
+export default CheckoutSummary;
