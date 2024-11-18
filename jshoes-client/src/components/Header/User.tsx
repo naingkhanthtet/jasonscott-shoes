@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Drawer, IconButton } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import RegisterForm from "../Form/RegisterForm";
 
 const User: React.FC = () => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -23,7 +24,7 @@ const User: React.FC = () => {
         onClose={handleCloseClick}
         PaperProps={{
           style: {
-            width: "400px",
+            width: "500px",
             padding: "20px",
           },
         }}
@@ -37,6 +38,7 @@ const User: React.FC = () => {
         >
           <CloseOutlinedIcon />
         </IconButton>
+        <RegisterForm />
       </Drawer>
     </>
   );
