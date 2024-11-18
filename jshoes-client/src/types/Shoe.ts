@@ -8,4 +8,5 @@ export default interface Shoe {
   gender: string;
   image: string;
   stock: number;
+  quantity: number;
 }
