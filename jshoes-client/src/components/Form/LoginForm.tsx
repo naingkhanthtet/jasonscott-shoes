@@ -4,18 +4,40 @@ import { StyledTextarea } from "../CustomComponents/FormComponents";
 import { Box, Typography, IconButton } from "@mui/material";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import axiosInstance from "../../interceptors/axiosInstance";
 
-const LoginForm: React.FC<{ onToggleUser: () => void }> = ({
+interface LoginFormProps {
+  onToggleUser: () => void;
+  onLoginSuccess: () => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({
   onToggleUser,
+  onLoginSuccess,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>("");
 
   const handlePasswordView = () => setShowPassword(!showPassword);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      const response = await axiosInstance.post("/auth/login/", {
+        username,
+        password,
+      });
+
+      if (response.status === 200) {
+        alert("Login successful!");
+        onLoginSuccess();
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Invalid username or password.");
+    }
   };
 
   return (
@@ -61,6 +83,13 @@ const LoginForm: React.FC<{ onToggleUser: () => void }> = ({
             }}
             fullWidth
           />
+
+          {/* Error Message */}
+          {error && (
+            <Typography color="error" sx={{ marginTop: 1 }}>
+              {error}
+            </Typography>
+          )}
 
           <StyledButton type="submit" sx={{ marginTop: 3 }} fullWidth>
             Login
