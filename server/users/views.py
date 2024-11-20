@@ -2,12 +2,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from shop.models import Cart, Favorite
-from django.contrib.auth.decorators import login_required
 
 
 @csrf_protect
@@ -46,6 +46,10 @@ def register_view(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login_view(request):
+    # clear existing session data
+    if request.user.is_authenticated:
+        request.session.flush()
+
     username = request.data.get("username")
     password = request.data.get("password")
     user = authenticate(username=username, password=password)
@@ -64,16 +68,35 @@ def login_view(request):
 
 
 @csrf_protect
-@api_view(["POST"])
+@api_view(["GET"])
 def logout_view(request):
-    logout(request)
-    return JsonResponse({"message": "Logout successful"}, status=status.HTTP_200_OK)
+    if request.user.is_authenticated:
+        # request.user.auth_token.delete()
+        request.session.flush()
+        logout(request)
+        response = JsonResponse(
+            {"message": "Logout successful"}, status=status.HTTP_200_OK
+        )
+        response.delete_cookie("sessionid", samesite="Lax")
+        response.delete_cookie("csrftoken", samesite="Lax")
+        return response
+    return JsonResponse(
+        {"message": "Not logged in"}, status=status.HTTP_400_BAD_REQUEST
+    )
 
 
+@csrf_protect
 @api_view(["GET"])
 @login_required
-def check_authentication(request):
-    return JsonResponse({"isAuthenticated": True})
+def get_user(request):
+    if request.user.is_authenticated:
+        return JsonResponse(
+            {
+                "username": request.user.username,
+                "isAuthenticated": True,
+            }
+        )
+    return JsonResponse({"isAuthenticated": False}, status=status.HTTP_403_FORBIDDEN)
 
 
 @csrf_protect
