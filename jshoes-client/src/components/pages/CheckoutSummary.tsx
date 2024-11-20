@@ -48,7 +48,7 @@ const CheckoutSummary: React.FC = () => {
         <Typography>${totalPrice}</Typography>
       </FlexRow>
       {cartShoes.map((cartShoe) => (
-        <FlexRow>
+        <FlexRow key={cartShoe.id}>
           <CartShoeBox
             sx={{
               width: "100%",
