@@ -22,6 +22,12 @@
   </head>
   <body>
     <div id="root"></div>
+    <input
+      type="hidden"
+      name="csrfmiddlewaretoken"
+      value="{% csrf_token %}"
+      id="csrf-token"
+    />
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
