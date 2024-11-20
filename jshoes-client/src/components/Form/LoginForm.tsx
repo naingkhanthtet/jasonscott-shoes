@@ -8,13 +8,9 @@ import axiosInstance from "../../interceptors/axiosInstance";
 
 interface LoginFormProps {
   onToggleUser: () => void;
-  onLoginSuccess: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({
-  onToggleUser,
-  onLoginSuccess,
-}) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onToggleUser }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -32,7 +28,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
       if (response.status === 200) {
         alert("Login successful!");
-        onLoginSuccess();
+        // Force reload the page to ensure clean state
+        window.location.reload();
       }
     } catch (err) {
       console.error("Login error:", err);
