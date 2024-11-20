@@ -15,27 +15,13 @@ const User: React.FC = () => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-      // if csrf token is in cookie, check auth status
-      const csrfCookie = document.cookie
-        .split("; ")
-        .find((cookie) => cookie.startsWith("csrftoken="));
-
-      // if csrf token not available, user is not logged in
-      if (!csrfCookie) {
-        setIsLoggedIn(false);
-        setUsername("");
-        return;
-      }
-
       try {
         const response = await axiosInstance.get("/auth/user/");
-        setIsLoggedIn(response.data.isAuthenticated);
-        if (response.data.isAuthenticated) {
-          setUsername(response.data.username);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
+        setIsLoggedIn(true);
+        setUsername(response.data.username);
+      } catch {
         setIsLoggedIn(false);
+        setUsername("");
       }
     };
 
@@ -47,6 +33,14 @@ const User: React.FC = () => {
       const response = await axiosInstance.get("/auth/logout/");
 
       if (response.status === 200) {
+        // Clear the csrf value
+        const csrfElement = document.getElementById(
+          "csrf-token"
+        ) as HTMLInputElement;
+        if (csrfElement) {
+          csrfElement.value = "";
+        }
+
         setIsLoggedIn(false);
         setOpenDrawer(false);
         setUsername("");

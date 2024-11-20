@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.decorators import login_required
+from django.middleware.csrf import get_token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -56,11 +56,15 @@ def login_view(request):
 
     if user is not None:
         login(request, user)
+        csrf_token = get_token(request)
+
         if request.data.get("favorites") or request.data.get("cart"):
             request.user = user
             # Call sync function with the cookie data
             sync_user_data(request)
-        return JsonResponse({"message": "Login success"}, status=status.HTTP_200_OK)
+        response = JsonResponse({"message": "Login success"}, status=status.HTTP_200_OK)
+        response.set_cookie("csrftoken", csrf_token, httponly=True, samesite="Lax")
+        return response
     else:
         return JsonResponse(
             {"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST
@@ -85,18 +89,14 @@ def logout_view(request):
     )
 
 
-@csrf_protect
 @api_view(["GET"])
-@login_required
 def get_user(request):
-    if request.user.is_authenticated:
-        return JsonResponse(
-            {
-                "username": request.user.username,
-                "isAuthenticated": True,
-            }
-        )
-    return JsonResponse({"isAuthenticated": False}, status=status.HTTP_403_FORBIDDEN)
+    return JsonResponse(
+        {
+            "username": request.user.username if request.user.is_authenticated else "",
+            "isAuthenticated": request.user.is_authenticated,
+        }
+    )
 
 
 @csrf_protect

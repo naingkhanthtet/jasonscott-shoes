@@ -3,7 +3,6 @@ import axios from "axios";
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000", // Backend base URL
   withCredentials: true,
-  // baseURL: "http://0.0.0.0:8000", // Backend base URL
 });
 
 // Request interceptor to attach headers or modify request configurations
