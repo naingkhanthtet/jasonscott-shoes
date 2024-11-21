@@ -49,44 +49,6 @@ class FavoriteView(ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class UnfavoriteView(DestroyAPIView):
-    """Create and delete favorite shoes (authenticated users only)."""
-
-    permission_classes = [IsAuthenticated]
-    serializer_class = FavoriteSerializer
-
-    def get_queryset(self):
-        return Favorite.objects.filter(user=self.request.user)
-
-    def delete(self, request, *args, **kwargs):
-        favorite = self.get_queryset().filter(id=kwargs["pk"]).first()
-        if not favorite:
-            return Response(
-                {"message": "There is no favorite item"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        favorite.delete()
-        return Response(
-            {"message": "Favorite deleted successfully."},
-            status=status.HTTP_204_NO_CONTENT,
-        )
-
-
-class SyncFavoriteView(APIView):
-    """Sync favorite shoes (authenticated users only)."""
-
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        user = request.user
-        favorites = request.data.get("favorites", [])
-
-        for item in favorites:
-            shoe = Shoe.objects.get(id=item["id"])
-            Favorite.objects.get_or_create(user=user, shoe=shoe)
-        return Response({"message": "Favorites synced successfully"})
-
-
 class CartView(CreateAPIView, DestroyAPIView):
     """Create and delete shoes in the cart (authenticated users only)."""
 
@@ -98,20 +60,3 @@ class CartView(CreateAPIView, DestroyAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
-class SyncCartView(APIView):
-    """Sync cart items (authenticated users only)."""
-
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        user = request.user
-        cart_items = request.data.get("cartItems", [])
-
-        for item in cart_items:
-            shoe = Shoe.objects.get(id=item["id"])
-            Cart.objects.update_or_create(
-                user=user, shoe=shoe, defaults={"quantity": item["quantity"]}
-            )
-        return Response({"message": "Cart synced successfully"})
