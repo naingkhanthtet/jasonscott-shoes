@@ -6,50 +6,33 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import RegisterForm from "../Form/RegisterForm";
 import LoginForm from "../Form/LoginForm";
 import { StyledButton } from "../CustomComponents/BasicComponents";
+import { useUser } from "../../utils/UserContext";
 
 const User: React.FC = () => {
+  const { user, setUser, handleLogout, syncUserData } = useUser();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("");
 
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const response = await axiosInstance.get("/auth/user/");
-        setIsLoggedIn(true);
-        setUsername(response.data.username);
+        setUser((prev) => ({
+          ...prev,
+          isLoggedIn: true,
+          username: response.data.username,
+        }));
       } catch {
-        setIsLoggedIn(false);
-        setUsername("");
+        setUser((prev) => ({
+          ...prev,
+          isLoggedIn: false,
+          username: "",
+        }));
       }
     };
 
     checkAuthStatus();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      const response = await axiosInstance.get("/auth/logout/");
-
-      if (response.status === 200) {
-        // Clear the csrf value
-        const csrfElement = document.getElementById(
-          "csrf-token"
-        ) as HTMLInputElement;
-        if (csrfElement) {
-          csrfElement.value = "";
-        }
-
-        setIsLoggedIn(false);
-        setOpenDrawer(false);
-        setUsername("");
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+  }, [setUser]);
 
   const handleIconClick = () => setOpenDrawer(true);
   const handleCloseClick = () => setOpenDrawer(false);
@@ -82,10 +65,10 @@ const User: React.FC = () => {
           <CloseOutlinedIcon />
         </IconButton>
 
-        {isLoggedIn ? (
+        {user.isLoggedIn ? (
           <>
             <Typography variant="h5" sx={{ marginBottom: 5 }}>
-              Welcome {username}
+              Welcome {user.username}
             </Typography>
             <StyledButton onClick={handleLogout} fullWidth>
               Logout
