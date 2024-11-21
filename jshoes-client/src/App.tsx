@@ -10,6 +10,7 @@ import Footer from "./components/Footer/Footer";
 import FavoritePage from "./components/pages/FavoritePage";
 import CartPage from "./components/pages/CartPage";
 import CheckoutPage from "./components/pages/CheckoutPage";
+import { UserProvider } from "./utils/UserContext";
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<"light" | "dark">(
@@ -26,21 +27,23 @@ const App: React.FC = () => {
   };
 
   return (
-    <Router>
-      <ThemeProvider theme={currentTheme}>
-        <CssBaseline />
-        <Nav onToggleTheme={toggleTheme} mode={mode} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shoes/:id" element={<ShoeDetail />} />
-          <Route path="/favorite" element={<FavoritePage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-        </Routes>
+    <UserProvider>
+      <Router>
+        <ThemeProvider theme={currentTheme}>
+          <CssBaseline />
+          <Nav onToggleTheme={toggleTheme} mode={mode} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/shoes/:id" element={<ShoeDetail />} />
+            <Route path="/favorite" element={<FavoritePage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+          </Routes>
 
-        <Footer />
-      </ThemeProvider>
-    </Router>
+          <Footer />
+        </ThemeProvider>
+      </Router>
+    </UserProvider>
   );
 };
 
