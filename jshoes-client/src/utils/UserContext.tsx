@@ -5,6 +5,7 @@ import axiosInstance from "../interceptors/axiosInstance";
 interface User {
   isLoggedIn: boolean;
   username: string;
+  userid: number;
   favorites: any[];
   cart: any[];
 }
@@ -19,6 +20,7 @@ interface UserContextProps {
 const defaultUser = {
   isLoggedIn: false,
   username: "",
+  userid: 0,
   favorites: [JSON.parse(Cookies.get("favorites") || "[]")],
   cart: [JSON.parse(Cookies.get("cart") || "[]")],
 };
@@ -29,11 +31,36 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User>(defaultUser);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // check authentication status
+  // set username, userid, isLoggedIn status
+  const checkAuthStatus = async () => {
+    try {
+      const response = await axiosInstance.get("/auth/user/");
+      setUser((prev) => ({
+        ...prev,
+        isLoggedIn: response.data.isAuthenticated,
+        username: response.data.username,
+        userid: response.data.userid,
+      }));
+    } catch {
+      setUser((prev) => ({
+        ...prev,
+        isLoggedIn: false,
+        username: "",
+        userid: 0,
+      }));
+    } finally {
+      setIsInitialized(true);
+    }
+  };
 
   const syncUserData = async () => {
     if (user.isLoggedIn) {
       try {
         const response = await axiosInstance.post("auth/sync", {
+          userid: user.userid,
           favorites: user.favorites,
           cart: user.cart,
         });
@@ -59,12 +86,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
+    checkAuthStatus();
+  }, [user.isLoggedIn]);
+
+  useEffect(() => {
     if (user.isLoggedIn) syncUserData();
   }, [user.isLoggedIn]);
 
   return (
     <UserContext.Provider value={{ user, setUser, handleLogout, syncUserData }}>
-      {children}
+      {isInitialized ? children : null}
     </UserContext.Provider>
   );
 };
