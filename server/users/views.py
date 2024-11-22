@@ -1,13 +1,18 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from django.middleware.csrf import get_token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from shop.models import Cart, Favorite, Shoe
+
+
+@ensure_csrf_cookie
+def csrf_token_view(request):
+    return JsonResponse({"csrfToken": get_token(request)})
 
 
 @csrf_protect
@@ -116,6 +121,9 @@ def sync_user_data(request):
     # Get favorites and cart data from request
     favorites_data = request.data.get("favorites", [])
     cart_data = request.data.get("cart", [])
+    # Additional debug: Check structure of favorites and cart data
+    print("Favorites data:", favorites_data)
+    print("Cart data:", cart_data)
 
     # Sync favorites
     favorite_ids = [item["id"] for item in favorites_data]  # Extract only shoe ids
