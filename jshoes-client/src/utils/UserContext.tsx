@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axiosInstance from "../interceptors/axiosInstance";
+import useCsrfToken from "./useCsrfToken";
 
 interface User {
   isLoggedIn: boolean;
@@ -25,13 +26,16 @@ const defaultUser = {
   cart: [JSON.parse(Cookies.get("cart") || "[]")],
 };
 
-const UserContext = createContext<UserContextProps | undefined>(undefined);
+export const UserContext = createContext<UserContextProps | undefined>(
+  undefined
+);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User>(defaultUser);
   const [isInitialized, setIsInitialized] = useState(false);
+  const csrfToken = useCsrfToken();
 
   // check authentication status
   // set username, userid, isLoggedIn status
@@ -57,16 +61,31 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const syncUserData = async () => {
+    const sanitizedFavorites = user.favorites.flat();
+    const sanitizedCart = user.cart.flat();
+
     if (user.isLoggedIn) {
       try {
-        const response = await axiosInstance.post("auth/sync", {
-          userid: user.userid,
-          favorites: user.favorites,
-          cart: user.cart,
-        });
+        const response = await axiosInstance.post(
+          "auth/sync/",
+          {
+            favorites: sanitizedFavorites,
+            cart: sanitizedCart,
+          },
+          {
+            headers: {
+              "X-CSRFToken": csrfToken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         console.log("Sync successful:", response.data);
+        Cookies.set("favorites", JSON.stringify(response.data.favorites));
+        Cookies.set("cart", JSON.stringify(response.data.cart));
       } catch (err) {
         console.error("Sync failed", err);
+        console.log(user.favorites);
+        console.log(csrfToken);
       }
     }
   };
@@ -100,7 +119,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useUser = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
