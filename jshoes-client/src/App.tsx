@@ -10,7 +10,7 @@ import Footer from "./components/Footer/Footer";
 import FavoritePage from "./components/pages/FavoritePage";
 import CartPage from "./components/pages/CartPage";
 import CheckoutPage from "./components/pages/CheckoutPage";
-import { UserProvider } from "./utils/UserContext";
+import { UserProvider } from "./utils/UserProvider";
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<"light" | "dark">(
