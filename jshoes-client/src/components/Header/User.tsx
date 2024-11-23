@@ -5,7 +5,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import RegisterForm from "../Form/RegisterForm";
 import LoginForm from "../Form/LoginForm";
 import { StyledButton } from "../CustomComponents/BasicComponents";
-import { useUser } from "../../utils/UserContext";
+import { useUser } from "../../utils/useUser";
 
 const User: React.FC = () => {
   const { user, handleLogout } = useUser();
