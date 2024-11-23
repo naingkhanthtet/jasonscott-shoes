@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -109,9 +110,6 @@ def get_user(request):
 @csrf_protect
 @api_view(["POST"])
 def sync_user_data(request):
-    """
-    Sync data from frontend cookies to registered user and return shoe details.
-    """
     user = request.user
     if not user.is_authenticated:
         return Response(
@@ -121,24 +119,19 @@ def sync_user_data(request):
     # Get favorites and cart data from request
     favorites_data = request.data.get("favorites", [])
     cart_data = request.data.get("cart", [])
-    # Additional debug: Check structure of favorites and cart data
-    print("Favorites data:", favorites_data)
-    print("Cart data:", cart_data)
 
     # Sync favorites
-    favorite_ids = [item["id"] for item in favorites_data]  # Extract only shoe ids
+    favorite_ids = [item["id"] for item in favorites_data]
     existing_favorites = set(
         Favorite.objects.filter(user=user, shoe_id__in=favorite_ids).values_list(
             "shoe_id", flat=True
         )
     )
 
-    # Add new favorites
     for shoe_id in favorite_ids:
         if shoe_id not in existing_favorites:
             Favorite.objects.create(user=user, shoe_id=shoe_id)
 
-    # Remove any favorites no longer in the updated list
     Favorite.objects.filter(user=user).exclude(shoe_id__in=favorite_ids).delete()
 
     # Sync cart items
@@ -146,36 +139,44 @@ def sync_user_data(request):
 
     for item in cart_data:
         shoe_id = item["id"]
-        quantity = item.get("quantity", 1)  # Default to 1 if not provided
+        quantity = item.get("quantity", 1)
 
         if shoe_id in cart_item_dict:
-            # Update quantity if the item already exists in the cart
             cart_item = cart_item_dict[shoe_id]
             if cart_item.quantity != quantity:
                 cart_item.quantity = quantity
                 cart_item.save()
         else:
-            # Create new cart item if it doesn't exist
             Cart.objects.create(user=user, shoe_id=shoe_id, quantity=quantity)
 
-    # Remove cart items not present in the updated list
     Cart.objects.filter(user=user).exclude(
         shoe_id__in=[item["id"] for item in cart_data]
     ).delete()
 
-    # Fetch shoe details for favorites and cart
+    # Get full URLs for images
+    def get_full_image_url(image_path):
+        return request.build_absolute_uri(settings.MEDIA_URL + image_path)
+
+    # Fetch shoe details and ensure image URLs are complete
     favorite_shoes = Shoe.objects.filter(id__in=favorite_ids).values(
         "id", "name", "price", "image"
     )
+    favorite_shoes = [
+        {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in favorite_shoes
+    ]
+
     cart_shoes = Shoe.objects.filter(id__in=[item["id"] for item in cart_data]).values(
-        "id", "name", "price", "image"
+        "id", "name", "price", "image", "brand", "color", "type"
     )
+    cart_shoes = [
+        {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in cart_shoes
+    ]
 
     return Response(
         {
             "message": "Sync successful",
-            "favorites": list(favorite_shoes),
-            "cart": list(cart_shoes),
+            "favorites": favorite_shoes,
+            "cart": cart_shoes,
         },
         status=status.HTTP_200_OK,
     )
