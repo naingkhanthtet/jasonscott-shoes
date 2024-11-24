@@ -46,17 +46,27 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchUserData = async () => {
     try {
       const response = await axiosInstance.get("/shop/user-data/");
-      // const { favorites, cart } = response.data;
+      const { favorites, cart } = response.data;
 
+      const mergedFavorites = mergeDataWithCookies(
+        favorites,
+        Cookies.get("favorites")
+      );
+      const mergedCart = mergeDataWithCookies(cart, Cookies.get("cart"));
+
+      // Set merged data in state and cookies
       setUser((prev) => ({
         ...prev,
-        favorites: response.data.favorites,
-        cart: response.data.cart,
+        favorites: mergedFavorites,
+        cart: mergedCart,
       }));
 
-      Cookies.set("favorites", JSON.stringify(response.data.favorites));
-      Cookies.set("cart", JSON.stringify(response.data.cart));
+      Cookies.set("favorites", JSON.stringify(mergedFavorites));
+      Cookies.set("cart", JSON.stringify(mergedCart));
       setHasFetchedData(true);
+
+      // Initial sync to backend to consolidate
+      syncUserData();
     } catch (err) {
       console.error("Error fetching user data", err);
     }
@@ -88,6 +98,20 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         console.log(csrfToken);
       }
     }
+  };
+
+  const mergeDataWithCookies = (
+    backendData: any[],
+    cookieData: string | undefined
+  ) => {
+    const parsedCookieData = cookieData ? JSON.parse(cookieData) : [];
+    const mergedData = [...backendData];
+    parsedCookieData.forEach((cookieItem: { id: any }) => {
+      if (!mergedData.some((item) => item.id === cookieItem.id)) {
+        mergedData.push(cookieItem);
+      }
+    });
+    return mergedData;
   };
 
   const handleLogout = async () => {
