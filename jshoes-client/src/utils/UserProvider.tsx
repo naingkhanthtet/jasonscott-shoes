@@ -66,15 +66,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       setHasFetchedData(true);
 
       // Initial sync to backend to consolidate
-      syncUserData();
+      syncUserData(mergedFavorites, mergedCart);
     } catch (err) {
       console.error("Error fetching user data", err);
     }
   };
 
-  const syncUserData = async () => {
-    const sanitizedFavorites = user.favorites.flat();
-    const sanitizedCart = user.cart.flat();
+  const syncUserData = async (
+    favoritesToSync = user.favorites,
+    cartToSync = user.cart
+  ) => {
+    const sanitizedFavorites = favoritesToSync.flat();
+    const sanitizedCart = cartToSync.flat();
 
     if (user.isLoggedIn && hasFetchedData) {
       try {
