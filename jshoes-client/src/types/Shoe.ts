@@ -1,12 +1,12 @@
 export default interface Shoe {
   id: number;
   name: string;
-  brand: string;
-  color: string;
-  type: string;
+  brand?: string;
+  color?: string;
+  type?: string;
   price: number;
-  gender: string;
+  gender?: string;
   image: string;
-  stock: number;
-  quantity: number;
+  stock?: number;
+  quantity?: number;
 }
