@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Cookies from "js-cookie";
 import axiosInstance from "../interceptors/axiosInstance";
 import useCsrfToken from "./useCsrfToken";
 import { User, UserContext } from "./UserContext";
+import Shoe from "../types/Shoe";
 
 const defaultUser = {
   isLoggedIn: false,
@@ -17,11 +18,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User>(defaultUser);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [hasFetchedData, setHasFetchedData] = useState(false);
+  const [backendFavorites, setBackendFavorites] = useState<Shoe[]>([]);
+  const [backendCart, setBackendCart] = useState<Shoe[]>([]);
   const csrfToken = useCsrfToken();
 
-  // check authentication status
-  // set username, userid, isLoggedIn status
   const checkAuthStatus = async () => {
     try {
       const response = await axiosInstance.get("/auth/user/");
@@ -48,44 +48,37 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await axiosInstance.get("/shop/user-data/");
       const { favorites, cart } = response.data;
 
-      const mergedFavorites = mergeDataWithCookies(
-        favorites,
-        Cookies.get("favorites")
-      );
-      const mergedCart = mergeDataWithCookies(cart, Cookies.get("cart"));
-
-      // Set merged data in state and cookies
       setUser((prev) => ({
         ...prev,
-        favorites: mergedFavorites,
-        cart: mergedCart,
+        favorites,
+        cart,
       }));
 
-      Cookies.set("favorites", JSON.stringify(mergedFavorites));
-      Cookies.set("cart", JSON.stringify(mergedCart));
-      setHasFetchedData(true);
+      setBackendFavorites(favorites);
+      setBackendCart(cart);
 
-      // Initial sync to backend to consolidate
-      syncUserData(mergedFavorites, mergedCart);
+      Cookies.set("favorites", JSON.stringify(favorites));
+      Cookies.set("cart", JSON.stringify(cart));
     } catch (err) {
       console.error("Error fetching user data", err);
     }
   };
 
-  const syncUserData = async (
-    favoritesToSync = user.favorites,
-    cartToSync = user.cart
-  ) => {
-    const sanitizedFavorites = favoritesToSync.flat();
-    const sanitizedCart = cartToSync.flat();
+  const syncUserData = useCallback(async () => {
+    if (!user.isLoggedIn) return;
 
-    if (user.isLoggedIn && hasFetchedData) {
+    const isCartDifferent =
+      JSON.stringify(user.cart) !== JSON.stringify(backendCart);
+    const isFavoritesDifferent =
+      JSON.stringify(user.favorites) !== JSON.stringify(backendFavorites);
+
+    if (isCartDifferent || isFavoritesDifferent) {
       try {
-        const response = await axiosInstance.post(
+        await axiosInstance.post(
           "auth/sync/",
           {
-            favorites: sanitizedFavorites,
-            cart: sanitizedCart,
+            favorites: user.favorites,
+            cart: user.cart,
           },
           {
             headers: {
@@ -94,27 +87,46 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
             },
           }
         );
-        console.log("Sync successful:", response.data);
+        setBackendFavorites(user.favorites);
+        setBackendCart(user.cart);
+        console.log("Sync successful");
       } catch (err) {
         console.error("Sync failed", err);
-        console.log(user.favorites);
-        console.log(csrfToken);
       }
     }
+  }, [
+    user.isLoggedIn,
+    user.favorites,
+    user.cart,
+    backendFavorites,
+    backendCart,
+    csrfToken,
+  ]);
+
+  // Debounce the sync operation
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      syncUserData();
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [backendCart, backendFavorites, syncUserData]);
+
+  const handleAddToCart = async (cartItem: Shoe, sync = true) => {
+    const updatedCart = [...user.cart, { ...cartItem, quantity: 1 }];
+    setUser((prev) => ({ ...prev, cart: updatedCart }));
+    Cookies.set("cart", JSON.stringify(updatedCart));
+
+    if (sync) syncUserData();
   };
 
-  const mergeDataWithCookies = (
-    backendData: any[],
-    cookieData: string | undefined
-  ) => {
-    const parsedCookieData = cookieData ? JSON.parse(cookieData) : [];
-    const mergedData = [...backendData];
-    parsedCookieData.forEach((cookieItem: { id: any }) => {
-      if (!mergedData.some((item) => item.id === cookieItem.id)) {
-        mergedData.push(cookieItem);
-      }
-    });
-    return mergedData;
+  const handleRemoveFromCart = async (itemId: number, sync = true) => {
+    const updatedCart = user.cart.filter((item) => item.id !== itemId);
+    setUser((prev) => ({ ...prev, cart: updatedCart }));
+    Cookies.set("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cartUpdated"));
+
+    if (sync) syncUserData();
   };
 
   const handleLogout = async () => {
@@ -141,14 +153,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [user.isLoggedIn]);
 
-  useEffect(() => {
-    if (user.isLoggedIn && hasFetchedData) {
-      syncUserData();
-    }
-  }, [user.isLoggedIn, hasFetchedData]);
-
   return (
-    <UserContext.Provider value={{ user, setUser, handleLogout, syncUserData }}>
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+        handleAddToCart,
+        handleRemoveFromCart,
+        handleLogout,
+        syncUserData,
+      }}
+    >
       {isInitialized ? children : null}
     </UserContext.Provider>
   );
