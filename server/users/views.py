@@ -107,6 +107,85 @@ def get_user(request):
     )
 
 
+# @csrf_protect
+# @api_view(["POST"])
+# def sync_user_data(request):
+#     user = request.user
+#     if not user.is_authenticated:
+#         return Response(
+#             {"message": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED
+#         )
+
+#     # Get favorites and cart data from request
+#     favorites_data = request.data.get("favorites", [])
+#     cart_data = request.data.get("cart", [])
+
+#     # Sync favorites
+#     favorite_ids = [item["id"] for item in favorites_data]
+#     existing_favorites = set(
+#         Favorite.objects.filter(user=user, shoe_id__in=favorite_ids).values_list(
+#             "shoe_id", flat=True
+#         )
+#     )
+
+#     for shoe_id in favorite_ids:
+#         if shoe_id not in existing_favorites:
+#             Favorite.objects.create(user=user, shoe_id=shoe_id)
+
+#     Favorite.objects.filter(user=user).exclude(shoe_id__in=favorite_ids).delete()
+
+#     # Sync cart items
+#     cart_item_dict = {item.shoe_id: item for item in Cart.objects.filter(user=user)}
+
+#     for item in cart_data:
+#         shoe_id = item["id"]
+#         quantity = item.get("quantity", 1)
+
+#         if shoe_id in cart_item_dict:
+#             cart_item = cart_item_dict[shoe_id]
+#             if cart_item.quantity != quantity:
+#                 cart_item.quantity = quantity
+#                 cart_item.save()
+#         else:
+#             Cart.objects.create(user=user, shoe_id=shoe_id, quantity=quantity)
+
+#     to_delete = Cart.objects.filter(user=user).exclude(
+#         shoe_id__in=[item["id"] for item in cart_data]
+#     )
+#     print("Items to be deleted from cart:", to_delete)
+
+#     # Perform deletion
+#     to_delete.delete()
+
+#     # Get full URLs for images
+#     def get_full_image_url(image_path):
+#         return request.build_absolute_uri(settings.MEDIA_URL + image_path)
+
+#     # Fetch shoe details and ensure image URLs are complete
+#     favorite_shoes = Shoe.objects.filter(id__in=favorite_ids).values(
+#         "id", "name", "price", "image"
+#     )
+#     favorite_shoes = [
+#         {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in favorite_shoes
+#     ]
+
+#     cart_shoes = Shoe.objects.filter(id__in=[item["id"] for item in cart_data]).values(
+#         "id", "name", "price", "image", "brand", "color", "type"
+#     )
+#     cart_shoes = [
+#         {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in cart_shoes
+#     ]
+
+#     return Response(
+#         {
+#             "message": "Sync successful",
+#             "favorites": favorite_shoes,
+#             "cart": cart_shoes,
+#         },
+#         status=status.HTTP_200_OK,
+#     )
+
+
 @csrf_protect
 @api_view(["POST"])
 def sync_user_data(request):
@@ -136,11 +215,15 @@ def sync_user_data(request):
 
     # Sync cart items
     cart_item_dict = {item.shoe_id: item for item in Cart.objects.filter(user=user)}
+    cart_item_ids = [
+        item["id"] for item in cart_data
+    ]  # Get only IDs for deletion check
 
     for item in cart_data:
         shoe_id = item["id"]
         quantity = item.get("quantity", 1)
 
+        # Update quantity if item exists, else create it
         if shoe_id in cart_item_dict:
             cart_item = cart_item_dict[shoe_id]
             if cart_item.quantity != quantity:
@@ -149,15 +232,15 @@ def sync_user_data(request):
         else:
             Cart.objects.create(user=user, shoe_id=shoe_id, quantity=quantity)
 
-    Cart.objects.filter(user=user).exclude(
-        shoe_id__in=[item["id"] for item in cart_data]
-    ).delete()
+    # Delete items in backend that aren't in the incoming `cart_data`
+    items_to_delete = Cart.objects.filter(user=user).exclude(shoe_id__in=cart_item_ids)
+    print("Items to be deleted from cart:", items_to_delete)  # Debug print statement
+    items_to_delete.delete()  # Perform the deletion
 
-    # Get full URLs for images
+    # Prepare response with updated favorites and cart data
     def get_full_image_url(image_path):
         return request.build_absolute_uri(settings.MEDIA_URL + image_path)
 
-    # Fetch shoe details and ensure image URLs are complete
     favorite_shoes = Shoe.objects.filter(id__in=favorite_ids).values(
         "id", "name", "price", "image"
     )
@@ -165,7 +248,7 @@ def sync_user_data(request):
         {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in favorite_shoes
     ]
 
-    cart_shoes = Shoe.objects.filter(id__in=[item["id"] for item in cart_data]).values(
+    cart_shoes = Shoe.objects.filter(id__in=cart_item_ids).values(
         "id", "name", "price", "image", "brand", "color", "type"
     )
     cart_shoes = [
