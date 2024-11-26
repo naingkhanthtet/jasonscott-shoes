@@ -14,15 +14,28 @@ import { CartShoeBox } from "../CustomComponents/CartComponents";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import FavoriteButton from "../Buttons/FavoriteButton";
 import { Link } from "react-router-dom";
+import { useUser } from "../../utils/useUser";
 
 const CartPage: React.FC = () => {
   const [cartShoes, setCartShoes] = useState<Shoe[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const { handleRemoveFromCart } = useUser();
 
-  // Load cart shoes from cookies
   useEffect(() => {
-    const carts = JSON.parse(Cookies.get("cart") || "[]");
-    setCartShoes(carts);
+    // load cart data from cookies
+    const loadCartFromCookies = () => {
+      const carts = JSON.parse(Cookies.get("cart") || "[]");
+      setCartShoes(carts);
+    };
+    loadCartFromCookies();
+
+    const updateCartListener = () => loadCartFromCookies();
+
+    // run load cart data again after updating the cart data
+    window.addEventListener("cartUpdated", updateCartListener);
+    return () => {
+      window.removeEventListener("cartUpdated", updateCartListener);
+    };
   }, []);
 
   // Calculate total price based on quantities
@@ -32,15 +45,6 @@ const CartPage: React.FC = () => {
     }, 0);
     setTotalPrice(newTotalPrice);
   }, [cartShoes]);
-
-  const handleRemoveShoe = (id: number) => {
-    const updatedCartShoes = cartShoes.filter((shoe) => shoe.id !== id);
-    setCartShoes(updatedCartShoes);
-    Cookies.set("cart", JSON.stringify(updatedCartShoes));
-
-    // Dispatch an event to update the cart in other components
-    window.dispatchEvent(new Event("cartUpdated"));
-  };
 
   const handleQuantityChange = (id: number, quantity: number) => {
     const updatedCartShoes = cartShoes.map((shoe) =>
@@ -106,7 +110,9 @@ const CartPage: React.FC = () => {
 
                   {/* Icons section */}
                   <FlexColumn sx={{ width: "10%", alignItems: "center" }}>
-                    <IconButton onClick={() => handleRemoveShoe(cartShoe.id)}>
+                    <IconButton
+                      onClick={() => handleRemoveFromCart(cartShoe.id)}
+                    >
                       <DeleteOutlineOutlinedIcon />
                     </IconButton>
                     <FavoriteButton

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import Shoe from "../../types/Shoe";
 import { StyledButton } from "../CustomComponents/BasicComponents";
+import { useUser } from "../../utils/useUser";
 
 const CartButton: React.FC<Shoe> = ({
   id,
@@ -12,29 +12,21 @@ const CartButton: React.FC<Shoe> = ({
   type,
   image,
 }) => {
+  const { user, handleAddToCart, handleRemoveFromCart } = useUser();
   const [isCart, setIsCart] = useState(false);
 
   useEffect(() => {
-    const cartItems = JSON.parse(Cookies.get("cart") || "[]");
-    setIsCart(cartItems.some((shoe: Shoe) => shoe.id === id));
-  }, [id]);
+    setIsCart(user.cart.some((shoe: Shoe) => shoe.id === id));
+  }, [user.cart, id]);
 
   const toggleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const cartItems = JSON.parse(Cookies.get("cart") || "[]");
-    let updatedCartItems;
 
     if (isCart) {
-      updatedCartItems = cartItems.filter((shoe: Shoe) => shoe.id !== id);
+      handleRemoveFromCart(id);
     } else {
-      updatedCartItems = [
-        ...cartItems,
-        { id, name, price, brand, color, type, image, quantity: 1 },
-      ];
+      handleAddToCart({ id, name, price, brand, color, type, image });
     }
-
-    Cookies.set("cart", JSON.stringify(updatedCartItems), { expires: 7 });
-    // Dispatch the custom event to notify of cart changes
     window.dispatchEvent(new Event("cartUpdated"));
     setIsCart(!isCart);
   };
