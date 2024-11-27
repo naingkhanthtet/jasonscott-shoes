@@ -15,6 +15,8 @@ export interface UserContextProps {
   syncUserData: () => void;
   handleAddToCart: (cartItem: Shoe) => void;
   handleRemoveFromCart: (itemId: number) => void;
+  handleAddFavorites: (favoriteItem: Shoe) => void;
+  handleRemoveFavorites: (itemId: number) => void;
 }
 
 export const UserContext = createContext<UserContextProps | undefined>(

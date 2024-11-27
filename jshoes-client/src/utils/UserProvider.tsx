@@ -65,13 +65,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const syncUserData = useCallback(async () => {
+    // cancel the sync function if a user is not logged in
     if (!user.isLoggedIn) return;
 
+    // compare the user value and state values
     const isCartDifferent =
       JSON.stringify(user.cart) !== JSON.stringify(backendCart);
     const isFavoritesDifferent =
       JSON.stringify(user.favorites) !== JSON.stringify(backendFavorites);
 
+    // sync if the values are different
     if (isCartDifferent || isFavoritesDifferent) {
       try {
         await axiosInstance.post(
@@ -112,21 +115,47 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => clearTimeout(timeoutId);
   }, [backendCart, backendFavorites, syncUserData]);
 
-  const handleAddToCart = async (cartItem: Shoe, sync = true) => {
+  /*
+  Cart action methods
+  */
+  // add to cart function for both registered and unregistered
+  const handleAddToCart = async (cartItem: Shoe) => {
     const updatedCart = [...user.cart, { ...cartItem, quantity: 1 }];
     setUser((prev) => ({ ...prev, cart: updatedCart }));
     Cookies.set("cart", JSON.stringify(updatedCart));
 
-    if (sync) syncUserData();
+    syncUserData();
   };
 
-  const handleRemoveFromCart = async (itemId: number, sync = true) => {
+  const handleRemoveFromCart = async (itemId: number) => {
     const updatedCart = user.cart.filter((item) => item.id !== itemId);
     setUser((prev) => ({ ...prev, cart: updatedCart }));
     Cookies.set("cart", JSON.stringify(updatedCart));
     window.dispatchEvent(new Event("cartUpdated"));
 
-    if (sync) syncUserData();
+    syncUserData();
+  };
+
+  /*
+  Favorite action methods
+  */
+  // add to favoir
+  const handleAddFavorites = async (favoriteItem: Shoe) => {
+    const updatedFavorites = [...user.favorites, { ...favoriteItem }];
+    setUser((prev) => ({ ...prev, favorites: updatedFavorites }));
+    Cookies.set("favorites", JSON.stringify(updatedFavorites));
+
+    syncUserData();
+  };
+
+  const handleRemoveFavorites = async (itemId: number) => {
+    const updatedFavorites = user.favorites.filter(
+      (item) => item.id !== itemId
+    );
+    setUser((prev) => ({ ...prev, favorites: updatedFavorites }));
+    Cookies.set("favorites", JSON.stringify(updatedFavorites));
+
+    syncUserData();
   };
 
   const handleLogout = async () => {
@@ -160,6 +189,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser,
         handleAddToCart,
         handleRemoveFromCart,
+        handleAddFavorites,
+        handleRemoveFavorites,
         handleLogout,
         syncUserData,
       }}
