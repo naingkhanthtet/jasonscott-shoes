@@ -46,7 +46,7 @@ const User: React.FC = () => {
         {user.isLoggedIn ? (
           <>
             <Typography variant="h5" sx={{ marginBottom: 5 }}>
-              Welcome {user.username} ({user.userid})
+              Welcome {user.username}
             </Typography>
             <StyledButton onClick={handleLogout} fullWidth>
               Logout

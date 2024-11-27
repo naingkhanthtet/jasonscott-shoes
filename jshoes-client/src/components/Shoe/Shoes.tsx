@@ -7,23 +7,18 @@ import {
 } from "../CustomComponents/BasicComponents";
 import { PaginationDropdown } from "../CustomComponents/ShoeComponents";
 import { MenuItem } from "@mui/material";
-
-interface Shoe {
-  id: number;
-  name: string;
-  brand: string;
-  gender: string;
-  color: string;
-  type: string;
-  price: number;
-  image: string;
-}
+import Shoe from "../../types/Shoe";
 
 interface ShoesProps {
-  selectedOptions: string[];
+  selectedFilters: {
+    brand: string[];
+    color: string[];
+    type: string[];
+    gender: string[];
+  };
 }
 
-const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
+const Shoes: React.FC<ShoesProps> = ({ selectedFilters }) => {
   const [shoes, setShoes] = useState<Shoe[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,19 +39,22 @@ const Shoes: React.FC<ShoesProps> = ({ selectedOptions }) => {
       });
   }, []);
 
-  // Filter shoes based on selected options
-  const filteredShoes =
-    selectedOptions.length === 0
-      ? shoes
-      : shoes.filter((shoe) =>
-          selectedOptions.some(
-            (option) =>
-              shoe.brand === option ||
-              shoe.color === option ||
-              shoe.type === option ||
-              shoe.gender === option
-          )
-        );
+  const filteredShoes = shoes.filter((shoe) => {
+    const matchesBrand =
+      selectedFilters.brand.length === 0 ||
+      (shoe.brand && selectedFilters.brand.includes(shoe.brand));
+    const matchesColor =
+      selectedFilters.color.length === 0 ||
+      (shoe.color && selectedFilters.color.includes(shoe.color));
+    const matchesType =
+      selectedFilters.type.length === 0 ||
+      (shoe.type && selectedFilters.type.includes(shoe.type));
+    const matchesGender =
+      selectedFilters.gender.length === 0 ||
+      (shoe.gender && selectedFilters.gender.includes(shoe.gender));
+
+    return matchesBrand && matchesColor && matchesType && matchesGender;
+  });
 
   const totalPages = Math.ceil(filteredShoes.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
