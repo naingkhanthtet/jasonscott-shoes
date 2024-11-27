@@ -5,6 +5,7 @@ import {
   FlexColumn,
   FlexRow,
   StyledButton,
+  StyledLink,
 } from "../CustomComponents/BasicComponents";
 import Shoe from "../../types/Shoe";
 import Cookies from "js-cookie";
@@ -13,11 +14,11 @@ import { Typography, Box, IconButton, Select, MenuItem } from "@mui/material";
 import { CartShoeBox } from "../CustomComponents/CartComponents";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import FavoriteButton from "../Buttons/FavoriteButton";
-import { Link } from "react-router-dom";
 import { useUser } from "../../utils/useUser";
 
 const CartPage: React.FC = () => {
   const [cartShoes, setCartShoes] = useState<Shoe[]>([]);
+  const [totalQuantity, setTotalQuantity] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const { handleRemoveFromCart } = useUser();
 
@@ -44,6 +45,14 @@ const CartPage: React.FC = () => {
       return sum + shoe.price * (shoe.quantity || 1);
     }, 0);
     setTotalPrice(newTotalPrice);
+  }, [cartShoes]);
+
+  // calculate total quantity of all shoes in cart
+  useEffect(() => {
+    const newTotalQuantity = cartShoes.reduce((sum, shoe) => {
+      return sum + (shoe.quantity || 1);
+    }, 0);
+    setTotalQuantity(newTotalQuantity);
   }, [cartShoes]);
 
   const handleQuantityChange = (id: number, quantity: number) => {
@@ -83,30 +92,33 @@ const CartPage: React.FC = () => {
                     padding: "10px",
                   }}
                 >
-                  <Box
-                    sx={{
-                      width: "30%",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Image
-                      src={cartShoe.image}
-                      alt={cartShoe.name}
-                      sx={{ maxWidth: "300px" }}
-                    />
-                  </Box>
+                  <StyledLink to={`/shoes/${cartShoe.id}`}>
+                    <Box
+                      sx={{
+                        width: "30%",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Image
+                        src={cartShoe.image}
+                        alt={cartShoe.name}
+                        sx={{ maxWidth: "300px" }}
+                      />
+                    </Box>
 
-                  {/* Content section */}
-                  <FlexColumn sx={{ width: "60%", padding: "10px" }}>
-                    <Typography variant="h5">{cartShoe.name}</Typography>
-                    <Typography>
-                      {cartShoe.brand}, {cartShoe.type}, {cartShoe.color}
-                    </Typography>
-                    <Typography variant="h5">
-                      ${(cartShoe.price * (cartShoe.quantity || 1)).toFixed(2)}
-                    </Typography>
-                  </FlexColumn>
+                    {/* Content section */}
+                    <FlexColumn sx={{ width: "60%", padding: "10px" }}>
+                      <Typography variant="h5">{cartShoe.name}</Typography>
+                      <Typography>
+                        {cartShoe.brand}, {cartShoe.type}, {cartShoe.color}
+                      </Typography>
+                      <Typography variant="h5">
+                        $
+                        {(cartShoe.price * (cartShoe.quantity || 1)).toFixed(2)}
+                      </Typography>
+                    </FlexColumn>
+                  </StyledLink>
 
                   {/* Icons section */}
                   <FlexColumn sx={{ width: "10%", alignItems: "center" }}>
@@ -159,19 +171,14 @@ const CartPage: React.FC = () => {
                 <Typography>Total Items</Typography>
                 <Typography>
                   {/* {Object.values(quantities).reduce((acc, qty) => acc + qty, 0)} */}
+                  {totalQuantity}
                 </Typography>
               </FlexRow>
               <FlexRow>
                 <Typography>Total Price</Typography>
                 <Typography>${totalPrice}</Typography>
               </FlexRow>
-              <Link
-                to="/checkout"
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                }}
-              >
+              <StyledLink to="/checkout">
                 <StyledButton
                   sx={{
                     width: "100%",
@@ -179,7 +186,7 @@ const CartPage: React.FC = () => {
                 >
                   Checkout
                 </StyledButton>
-              </Link>
+              </StyledLink>
             </FlexColumn>
           </>
         ) : (

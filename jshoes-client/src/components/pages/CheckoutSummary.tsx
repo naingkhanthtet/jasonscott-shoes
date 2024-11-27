@@ -10,31 +10,31 @@ import Cookies from "js-cookie";
 import { CartShoeBox } from "../CustomComponents/CartComponents";
 
 const CheckoutSummary: React.FC = () => {
-  const [cartShoes, setCartShoes] = useState<Shoe[]>([]);
+  const [checkoutShoes, setCheckoutShoes] = useState<Shoe[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalQuantity, setTotalQuantity] = useState<number>(0);
 
   // get shoes from cookies
   useEffect(() => {
     const carts = JSON.parse(Cookies.get("cart") || "[]");
-    setCartShoes(carts);
+    setCheckoutShoes(carts);
   }, []);
 
   // calculate total price
   useEffect(() => {
-    const newTotalPrice = cartShoes.reduce((sum, shoe) => {
+    const newTotalPrice = checkoutShoes.reduce((sum, shoe) => {
       return sum + shoe.price * (shoe.quantity || 1);
     }, 0);
     setTotalPrice(newTotalPrice);
-  }, [cartShoes]);
+  }, [checkoutShoes]);
 
   // calculate total quantity
   useEffect(() => {
-    const newTotalQuantity = cartShoes.reduce((sum, shoe) => {
+    const newTotalQuantity = checkoutShoes.reduce((sum, shoe) => {
       return sum + (shoe.quantity || 1);
     }, 0);
     setTotalQuantity(newTotalQuantity);
-  }, [cartShoes]);
+  }, [checkoutShoes]);
 
   return (
     <>
@@ -47,8 +47,8 @@ const CheckoutSummary: React.FC = () => {
         <Typography>Total Price</Typography>
         <Typography>${totalPrice}</Typography>
       </FlexRow>
-      {cartShoes.map((cartShoe) => (
-        <FlexRow key={cartShoe.id}>
+      {checkoutShoes.map((shoe) => (
+        <FlexRow key={shoe.id}>
           <CartShoeBox
             sx={{
               width: "100%",
@@ -62,20 +62,20 @@ const CheckoutSummary: React.FC = () => {
               }}
             >
               <Image
-                src={cartShoe.image}
-                alt={cartShoe.name}
+                src={shoe.image}
+                alt={shoe.name}
                 sx={{ maxWidth: "200px" }}
               />
             </Box>
             <FlexColumn sx={{ width: "70%", padding: "10px" }}>
               <Typography variant="h5">
-                {cartShoe.name} ({cartShoe.quantity})
+                {shoe.name} ({shoe.quantity})
               </Typography>
               <Typography>
-                {cartShoe.brand}, {cartShoe.type}, {cartShoe.color}
+                {shoe.brand}, {shoe.type}, {shoe.color}
               </Typography>
               <Typography variant="h5">
-                ${(cartShoe.price * (cartShoe.quantity || 1)).toFixed(2)}
+                ${(shoe.price * (shoe.quantity || 1)).toFixed(2)}
               </Typography>
             </FlexColumn>
           </CartShoeBox>
