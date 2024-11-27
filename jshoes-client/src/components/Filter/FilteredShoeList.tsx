@@ -3,23 +3,32 @@ import FilterDrawer from "./FilterDrawer";
 import Shoes from "../Shoe/Shoes";
 
 const FilteredShoeList: React.FC = () => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState({
+    brand: [] as string[],
+    color: [] as string[],
+    type: [] as string[],
+    gender: [] as string[],
+  });
 
-  const handleOptionChange = useCallback((option: string) => {
-    setSelectedOptions((prevOptions) =>
-      prevOptions.includes(option)
-        ? prevOptions.filter((item) => item !== option)
-        : [...prevOptions, option]
-    );
-  }, []);
+  const handleFilterChange = useCallback(
+    (category: keyof typeof selectedFilters, option: string) => {
+      setSelectedFilters((prevFilters) => ({
+        ...prevFilters,
+        [category]: prevFilters[category].includes(option)
+          ? prevFilters[category].filter((item) => item !== option)
+          : [...prevFilters[category], option],
+      }));
+    },
+    []
+  );
 
   return (
     <>
       <FilterDrawer
-        selectedOptions={selectedOptions}
-        handleOptionChange={handleOptionChange}
+        selectedFilters={selectedFilters}
+        onFilterChange={handleFilterChange}
       />
-      <Shoes selectedOptions={selectedOptions} />
+      <Shoes selectedFilters={selectedFilters} />
     </>
   );
 };

@@ -15,13 +15,21 @@ import genders from "../../assets/gender";
 import FilterSelections from "./FilterSelections";
 
 interface FilterDrawerProps {
-  selectedOptions: string[];
-  handleOptionChange: (option: string) => void;
+  selectedFilters: {
+    brand: string[];
+    color: string[];
+    type: string[];
+    gender: string[];
+  };
+  onFilterChange: (
+    category: keyof FilterDrawerProps["selectedFilters"],
+    option: string
+  ) => void;
 }
 
 const FilterDrawer: React.FC<FilterDrawerProps> = ({
-  selectedOptions,
-  handleOptionChange,
+  selectedFilters,
+  onFilterChange,
 }) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
@@ -42,26 +50,25 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   }, []);
 
   const isOptionSelected = useCallback(
-    (option: string) => selectedOptions.includes(option),
-    [selectedOptions]
+    (category: keyof FilterDrawerProps["selectedFilters"], option: string) =>
+      selectedFilters[category].includes(option),
+    [selectedFilters]
   );
 
   const sections = [
-    { name: "Brand", options: brands },
-    { name: "Gender", options: genders },
-    { name: "Color", options: colors },
-    { name: "Type", options: types },
+    { name: "Brand", options: brands, category: "brand" },
+    { name: "Gender", options: genders, category: "gender" },
+    { name: "Color", options: colors, category: "color" },
+    { name: "Type", options: types, category: "type" },
   ];
 
   return (
     <ContentWidth sx={{ padding: "20px" }}>
-      {/* Button to open the filter drawer */}
       <StyledButton onClick={handleDrawerOpen} disableRipple>
         Filter
         <FilterListOutlinedIcon />
       </StyledButton>
 
-      {/* Drawer for filter menu */}
       <Drawer
         anchor="left"
         open={openDrawer}
@@ -77,30 +84,38 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
           <CloseOutlinedIcon />
         </IconButton>
 
-        {/* Selected selection */}
         <WrapContainer>
           Selected:
-          {selectedOptions.length > 0 &&
-            selectedOptions.map((option) => (
+          {Object.entries(selectedFilters).map(([category, options]) =>
+            options.map((option) => (
               <SelectedFilterBox
-                onClick={() => handleOptionChange(option)}
+                onClick={() =>
+                  onFilterChange(
+                    category as keyof typeof selectedFilters,
+                    option
+                  )
+                }
                 key={option}
               >
                 <CloseOutlinedIcon /> {option}
               </SelectedFilterBox>
-            ))}
+            ))
+          )}
         </WrapContainer>
 
-        {/* Selections */}
-        {sections.map(({ name, options }) => (
+        {sections.map(({ name, options, category }) => (
           <FilterSelections
             key={name}
             section={name}
             options={options}
             isOpen={openSections[name]}
             onToggle={() => handleToggleSection(name)}
-            isOptionSelected={isOptionSelected}
-            onOptionChange={handleOptionChange}
+            isOptionSelected={(option) =>
+              isOptionSelected(category as keyof typeof selectedFilters, option)
+            }
+            onOptionChange={(option) =>
+              onFilterChange(category as keyof typeof selectedFilters, option)
+            }
           />
         ))}
       </Drawer>
