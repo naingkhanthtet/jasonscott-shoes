@@ -1,5 +1,6 @@
 import { Box, styled } from "@mui/material";
 import Button, { ButtonProps } from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -44,4 +45,12 @@ export const ContentWidth = styled(Box)({
   padding: "20px",
   margin: "auto",
   maxWidth: "1920px",
+});
+
+export const StyledLink = styled(Link)({
+  textDecoration: "none",
+  color: "inherit",
+  display: "flex",
+  alignItems: "center",
+  width: "100%",
 });
