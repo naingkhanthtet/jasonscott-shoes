@@ -14,6 +14,7 @@ import {
   SearchResult,
 } from "../CustomComponents/SearchComponents";
 import Shoe from "../../types/Shoe";
+import { StyledLink } from "../CustomComponents/BasicComponents";
 
 const SearchShoes: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -36,14 +37,16 @@ const SearchShoes: React.FC = () => {
 
     if (query.length > 0) {
       const response = await axiosInstance.get("/shop/shoes/");
-      const filteredResults = response.data.filter(
+      const searchFilteredResults = response.data.filter(
         (shoe: Shoe) =>
           shoe.name.toLowerCase().includes(query.toLowerCase()) ||
-          shoe.brand.toLowerCase().includes(query.toLowerCase()) ||
-          shoe.type.toLowerCase().includes(query.toLowerCase()) ||
-          shoe.color.toLowerCase().includes(query.toLowerCase())
+          (shoe.brand &&
+            shoe.brand.toLowerCase().includes(query.toLowerCase())) ||
+          (shoe.type &&
+            shoe.type.toLowerCase().includes(query.toLowerCase())) ||
+          (shoe.color && shoe.color.toLowerCase().includes(query.toLowerCase()))
       );
-      setSearchResults(filteredResults);
+      setSearchResults(searchFilteredResults);
     } else {
       setSearchResults([]);
     }
@@ -84,21 +87,26 @@ const SearchShoes: React.FC = () => {
 
         <List>
           {searchResults.map((shoe) => (
-            <SearchResult
-              key={shoe.id}
-              sx={{
-                cursor: "pointer",
-              }}
-            >
-              <ListItemAvatar>
-                <img
-                  src={shoe.image}
-                  alt={shoe.name}
-                  style={{ width: 50, height: 50 }}
+            <StyledLink to={`/shoes/${shoe.id}`} key={shoe.id}>
+              <SearchResult
+                key={shoe.id}
+                sx={{
+                  cursor: "pointer",
+                }}
+              >
+                <ListItemAvatar>
+                  <img
+                    src={shoe.image}
+                    alt={shoe.name}
+                    style={{ width: 50, height: 50 }}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={shoe.name}
+                  secondary={`$${shoe.price}`}
                 />
-              </ListItemAvatar>
-              <ListItemText primary={shoe.name} secondary={`$${shoe.price}`} />
-            </SearchResult>
+              </SearchResult>
+            </StyledLink>
           ))}
         </List>
       </Drawer>
