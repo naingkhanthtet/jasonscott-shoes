@@ -9,9 +9,19 @@ import Shoe from "../../types/Shoe";
 
 const FavoritePage: React.FC = () => {
   const [favoriteShoes, setFavoriteShoes] = useState<Shoe[]>([]);
+
   useEffect(() => {
-    const favorites = JSON.parse(Cookies.get("favorites") || "[]");
-    setFavoriteShoes(favorites);
+    // load favorites data from cookies
+    const loadFavoritesCookies = () => {
+      const favorites = JSON.parse(Cookies.get("favorites") || "[]");
+      setFavoriteShoes(favorites);
+    };
+    loadFavoritesCookies();
+
+    window.addEventListener("favoritesUpdated", loadFavoritesCookies);
+    return () => {
+      window.removeEventListener("favoritesUpdated", loadFavoritesCookies);
+    };
   }, []);
 
   return (
