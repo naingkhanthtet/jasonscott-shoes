@@ -20,7 +20,7 @@ const CartPage: React.FC = () => {
   const [cartShoes, setCartShoes] = useState<Shoe[]>([]);
   const [totalQuantity, setTotalQuantity] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const { handleRemoveFromCart } = useUser();
+  const { handleQuantityChange, handleRemoveFromCart } = useUser();
 
   useEffect(() => {
     // load cart data from cookies
@@ -30,12 +30,12 @@ const CartPage: React.FC = () => {
     };
     loadCartFromCookies();
 
-    const updateCartListener = () => loadCartFromCookies();
+    // const updateCartListener = () => loadCartFromCookies();
 
     // run load cart data again after updating the cart data
-    window.addEventListener("cartUpdated", updateCartListener);
+    window.addEventListener("cartUpdated", loadCartFromCookies);
     return () => {
-      window.removeEventListener("cartUpdated", updateCartListener);
+      window.removeEventListener("cartUpdated", loadCartFromCookies);
     };
   }, []);
 
@@ -54,17 +54,6 @@ const CartPage: React.FC = () => {
     }, 0);
     setTotalQuantity(newTotalQuantity);
   }, [cartShoes]);
-
-  const handleQuantityChange = (id: number, quantity: number) => {
-    const updatedCartShoes = cartShoes.map((shoe) =>
-      shoe.id === id ? { ...shoe, quantity } : shoe
-    );
-    setCartShoes(updatedCartShoes);
-    Cookies.set("cart", JSON.stringify(updatedCartShoes));
-
-    // Dispatch an event to update the cart in other components
-    window.dispatchEvent(new Event("cartUpdated"));
-  };
 
   return (
     <>

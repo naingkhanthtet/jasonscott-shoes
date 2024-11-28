@@ -120,13 +120,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   */
   // add to cart function for both registered and unregistered
   const handleAddToCart = async (cartItem: Shoe) => {
-    const updatedCart = [...user.cart, { ...cartItem, quantity: 1 }];
+    // const updatedCart = [...user.cart, { ...cartItem, quantity: 1 }];
+    const updatedCart = [...user.cart, { ...cartItem }];
     setUser((prev) => ({ ...prev, cart: updatedCart }));
     Cookies.set("cart", JSON.stringify(updatedCart));
 
     syncUserData();
   };
 
+  // remove from cart for both registered and unregistered
   const handleRemoveFromCart = async (itemId: number) => {
     const updatedCart = user.cart.filter((item) => item.id !== itemId);
     setUser((prev) => ({ ...prev, cart: updatedCart }));
@@ -136,10 +138,21 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     syncUserData();
   };
 
+  // cart item quanity change for both registered and unregistered
+  const handleQuantityChange = async (itemId: number, quantity: number) => {
+    const updatedCart = user.cart.map((shoe) =>
+      shoe.id === itemId ? { ...shoe, quantity } : shoe
+    );
+    setUser((prev) => ({ ...prev, cart: updatedCart }));
+    Cookies.set("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cartUpdated"));
+    await syncUserData();
+  };
+
   /*
   Favorite action methods
   */
-  // add to favoir
+  // add favorite
   const handleAddFavorites = async (favoriteItem: Shoe) => {
     const updatedFavorites = [...user.favorites, { ...favoriteItem }];
     setUser((prev) => ({ ...prev, favorites: updatedFavorites }));
@@ -148,6 +161,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     syncUserData();
   };
 
+  // remove favorite
   const handleRemoveFavorites = async (itemId: number) => {
     const updatedFavorites = user.favorites.filter(
       (item) => item.id !== itemId
@@ -190,6 +204,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         handleAddToCart,
         handleRemoveFromCart,
         handleAddFavorites,
+        handleQuantityChange,
         handleRemoveFavorites,
         handleLogout,
         syncUserData,
