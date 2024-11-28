@@ -121,21 +121,31 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   // add to cart function for both registered and unregistered
   const handleAddToCart = async (cartItem: Shoe) => {
     // const updatedCart = [...user.cart, { ...cartItem, quantity: 1 }];
-    const updatedCart = [...user.cart, { ...cartItem }];
+    const cartCookies = JSON.parse(Cookies.get("cart") || "[]");
+    // avoid cart duplicates
+    const isAlreadyInCart = cartCookies.some(
+      (shoe: Shoe) => shoe.id === cartItem.id
+    );
+
+    const updatedCart = isAlreadyInCart
+      ? cartCookies
+      : [...user.cart, { ...cartItem }];
     setUser((prev) => ({ ...prev, cart: updatedCart }));
     Cookies.set("cart", JSON.stringify(updatedCart));
 
-    syncUserData();
+    await syncUserData();
   };
 
   // remove from cart for both registered and unregistered
   const handleRemoveFromCart = async (itemId: number) => {
-    const updatedCart = user.cart.filter((item) => item.id !== itemId);
+    const cartCookies = JSON.parse(Cookies.get("cart") || "[]");
+
+    const updatedCart = cartCookies.filter((shoe: Shoe) => shoe.id !== itemId);
     setUser((prev) => ({ ...prev, cart: updatedCart }));
     Cookies.set("cart", JSON.stringify(updatedCart));
     window.dispatchEvent(new Event("cartUpdated"));
 
-    syncUserData();
+    await syncUserData();
   };
 
   // cart item quanity change for both registered and unregistered
@@ -154,22 +164,35 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   */
   // add favorite
   const handleAddFavorites = async (favoriteItem: Shoe) => {
-    const updatedFavorites = [...user.favorites, { ...favoriteItem }];
+    const favoritesFromCookies = JSON.parse(Cookies.get("favorites") || "[]");
+
+    // Avoid duplicates
+    const isAlreadyFavorited = favoritesFromCookies.some(
+      (shoe: Shoe) => shoe.id === favoriteItem.id
+    );
+
+    const updatedFavorites = isAlreadyFavorited
+      ? favoritesFromCookies
+      : [...favoritesFromCookies, { ...favoriteItem }];
+
     setUser((prev) => ({ ...prev, favorites: updatedFavorites }));
     Cookies.set("favorites", JSON.stringify(updatedFavorites));
 
-    syncUserData();
+    await syncUserData();
   };
 
   // remove favorite
   const handleRemoveFavorites = async (itemId: number) => {
-    const updatedFavorites = user.favorites.filter(
-      (item) => item.id !== itemId
+    const favoritesCookies = JSON.parse(Cookies.get("favorites") || "[]");
+
+    const updatedFavorites = favoritesCookies.filter(
+      (shoe: Shoe) => shoe.id !== itemId
     );
+
     setUser((prev) => ({ ...prev, favorites: updatedFavorites }));
     Cookies.set("favorites", JSON.stringify(updatedFavorites));
 
-    syncUserData();
+    await syncUserData();
   };
 
   const handleLogout = async () => {

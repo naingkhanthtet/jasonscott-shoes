@@ -93,6 +93,7 @@ const SearchShoes: React.FC = () => {
                 sx={{
                   cursor: "pointer",
                 }}
+                onClick={handleSearchClose}
               >
                 <ListItemAvatar>
                   <img

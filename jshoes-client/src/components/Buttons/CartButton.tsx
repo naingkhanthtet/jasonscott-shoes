@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Shoe from "../../types/Shoe";
 import { StyledButton } from "../CustomComponents/BasicComponents";
 import { useUser } from "../../utils/useUser";
+import Cookies from "js-cookie";
 
 const CartButton: React.FC<Shoe> = ({
   id,
@@ -15,8 +16,11 @@ const CartButton: React.FC<Shoe> = ({
   const { user, handleAddToCart, handleRemoveFromCart } = useUser();
   const [isCart, setIsCart] = useState(false);
 
+  // set isCart value from cart cookies
   useEffect(() => {
-    setIsCart(user.cart.some((shoe: Shoe) => shoe.id === id));
+    const cartFromCookies = JSON.parse(Cookies.get("cart") || "[]");
+    const cartExists = cartFromCookies.some((shoe: Shoe) => shoe.id === id);
+    setIsCart(cartExists);
   }, [user.cart, id]);
 
   const toggleAddToCart = (e: React.MouseEvent) => {
@@ -33,7 +37,7 @@ const CartButton: React.FC<Shoe> = ({
 
   return (
     <StyledButton onClick={toggleAddToCart}>
-      {isCart ? "In Cart" : "Add to Cart"}
+      {isCart ? "Remove from Cart" : "Add to Cart"}
     </StyledButton>
   );
 };
