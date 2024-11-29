@@ -31,7 +31,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         username: response.data.username,
         userid: response.data.userid,
       }));
-    } catch {
+
+      // will fetch user data if the user is authenticated
+      if (response.data.isAuthenticated) {
+        await fetchUserData();
+      }
+    } catch (err: any) {
+      if (err.response && err.response.status === 403) {
+        console.warn("User is not authenticated");
+      } else {
+        console.error("Error checking authentication status:", err);
+      }
       setUser((prev) => ({
         ...prev,
         isLoggedIn: false,
@@ -150,7 +160,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // cart item quanity change for both registered and unregistered
   const handleQuantityChange = async (itemId: number, quantity: number) => {
-    const updatedCart = user.cart.map((shoe) =>
+    const cartCookies = JSON.parse(Cookies.get("cart") || "[]");
+
+    const updatedCart = cartCookies.map((shoe: Shoe) =>
       shoe.id === itemId ? { ...shoe, quantity } : shoe
     );
     setUser((prev) => ({ ...prev, cart: updatedCart }));

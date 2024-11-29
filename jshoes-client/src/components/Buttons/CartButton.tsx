@@ -12,6 +12,7 @@ const CartButton: React.FC<Shoe> = ({
   color,
   type,
   image,
+  quantity,
 }) => {
   const { user, handleAddToCart, handleRemoveFromCart } = useUser();
   const [isCart, setIsCart] = useState(false);
@@ -29,7 +30,7 @@ const CartButton: React.FC<Shoe> = ({
     if (isCart) {
       handleRemoveFromCart(id);
     } else {
-      handleAddToCart({ id, name, price, brand, color, type, image });
+      handleAddToCart({ id, name, price, brand, color, type, image, quantity });
     }
     window.dispatchEvent(new Event("cartUpdated"));
     setIsCart(!isCart);
