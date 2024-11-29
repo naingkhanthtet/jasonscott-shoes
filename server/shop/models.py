@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+from cloudinary.models import CloudinaryField
 
 GENDER_CHOICES = [
     ("M", "Male"),
@@ -57,7 +58,7 @@ class Shoe(models.Model):
     stock = models.PositiveIntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
-    image = models.ImageField(upload_to="shoe_images/", blank=False)
+    image = CloudinaryField("image")
 
     # Image size validation
     def clean(self):
