@@ -14,18 +14,31 @@ import os
 from pathlib import Path
 from decouple import config
 
+# cloudinary imports
+import cloudinary
+import cloudinary.api
+import cloudinary.uploader
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# cloudinary config
+cloudinary.config(
+    cloud_name=config("CLOUDINARY_NAME"),
+    api_key=config("CLOUDINARY_KEY"),
+    api_secret=config("CLOUDINARY_SECRET"),
+    secure=True,
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-euk5#5cla_smd@n(mmtna)7=37r9xurflt$b09i@v)@$vgq+__"
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
+# DEBUG = config("DEBUG")
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -45,9 +58,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "corsheaders",
+    "cloudinary",
     "shop",
     "users",
-    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -91,8 +105,7 @@ DATABASES = {
         "USER": config("MYSQL_USER"),
         "PASSWORD": config("MYSQL_PASSWORD"),
         "HOST": config("DB_HOST", "db"),
-        # "HOST": "127.0.0.1",
-        "PORT": config("DB_PORT", "3306"),
+        "PORT": config("DB_PORT", "3306", cast=int),
     }
 }
 
@@ -149,12 +162,24 @@ REST_FRAMEWORK = {
     ],
 }
 
+# SECURE_SSL_REDIRECT = True
+
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
-SESSION_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = False
-# CSRF_COOKIE_HTTPONLY = False
+# SESSION_COOKIE_SAMESITE = "Strict"
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_HTTPONLY = True
+
+# CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_SAMESITE = "Strict"
+CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
@@ -162,11 +187,11 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-]
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://localhost:\d+$",
+    r"^http://127.0.0.1:\d+$",
+]
 
 
 MEDIA_URL = "/media/"
