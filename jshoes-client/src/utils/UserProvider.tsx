@@ -55,7 +55,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchUserData = async () => {
     try {
-      const response = await axiosInstance.get("/shop/user-data/");
+      const response = await axiosInstance.get("/auth/user-data/");
       const { favorites, cart } = response.data;
 
       setUser((prev) => ({

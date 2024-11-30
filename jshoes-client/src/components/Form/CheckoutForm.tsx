@@ -5,7 +5,7 @@ import {
   StyledSelect,
   StyledTextarea,
 } from "../CustomComponents/FormComponents";
-import validationSchema from "./validationSchema";
+import checkoutValidationSchema from "./checkoutValidationSchema";
 import { useFormik } from "formik";
 
 const CheckoutForm: React.FC = () => {
@@ -22,7 +22,7 @@ const CheckoutForm: React.FC = () => {
       optionalAddress: "",
       paymentOption: "",
     },
-    validationSchema: validationSchema,
+    validationSchema: checkoutValidationSchema,
     onSubmit: (values) => {
       console.table(values);
     },
