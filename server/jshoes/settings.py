@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from decouple import config
+import dj_database_url
 
 # cloudinary imports
 import cloudinary
@@ -98,16 +99,30 @@ WSGI_APPLICATION = "jshoes.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+# DATABASES = {"default": dj_database_url.parse(config("POSTGRES_URL"))}
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": config("MYSQL_DATABASE"),
-        "USER": config("MYSQL_USER"),
-        "PASSWORD": config("MYSQL_PASSWORD"),
-        "HOST": config("DB_HOST", "db"),
-        "PORT": config("DB_PORT", "3306", cast=int),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("POSTGRES_DB"),
+        "USER": config("POSTGRES_USER"),
+        "PASSWORD": config("POSTGRES_PASSWORD"),
+        "HOST": config("POSTGRES_HOST", "db"),
+        "PORT": config("POSTGRES_PORT", "5432", cast=int),
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": config("MYSQL_DATABASE"),
+#         "USER": config("MYSQL_USER"),
+#         "PASSWORD": config("MYSQL_PASSWORD"),
+#         "HOST": config("MYSQL_HOST", "db"),
+#         "PORT": config("MYSQL_PORT", "3306", cast=int),
+#     }
+# }
 
 
 # Password validation
