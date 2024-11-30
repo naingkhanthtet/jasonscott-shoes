@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Drawer, IconButton, Typography } from "@mui/material";
+import { Drawer, IconButton } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import RegisterForm from "../Form/RegisterForm";
 import LoginForm from "../Form/LoginForm";
-import { StyledButton } from "../CustomComponents/BasicComponents";
 import { useUser } from "../../utils/useUser";
+import MemberMenu from "../pages/MemberMenu";
 
 const User: React.FC = () => {
-  const { user, handleLogout } = useUser();
+  const { user } = useUser();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
 
@@ -44,14 +44,7 @@ const User: React.FC = () => {
         </IconButton>
 
         {user.isLoggedIn ? (
-          <>
-            <Typography variant="h5" sx={{ marginBottom: 5 }}>
-              Welcome {user.username}
-            </Typography>
-            <StyledButton onClick={handleLogout} fullWidth>
-              Logout
-            </StyledButton>
-          </>
+          <MemberMenu />
         ) : isRegistering ? (
           <RegisterForm onToggleUser={toggleUserSwitch} />
         ) : (
