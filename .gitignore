@@ -193,3 +193,5 @@ dist-ssr
 *.sw?
 
 server/media/*
+server/shop_data.json
+db_backup.sql
