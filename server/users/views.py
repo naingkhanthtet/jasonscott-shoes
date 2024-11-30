@@ -27,7 +27,7 @@ def register_view(request):
 
     if password != re_password:
         return Response(
-            {"message": "Passwords do not match"}, status=status.HTTP_400_BADE_RQUEST
+            {"message": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST
         )
     if User.objects.filter(username=username).exists():
         return Response({"message": "user exists"}, status=status.HTTP_400_BAD_REQUEST)
@@ -38,6 +38,8 @@ def register_view(request):
         )
 
     user = User.objects.create_user(email=email, username=username, password=password)
+    login(request._request, user)
+
     # Sync data after registration if cookies data is available
     if request.data.get("favorites") or request.data.get("cart"):
         request.user = user
@@ -105,85 +107,6 @@ def get_user(request):
             "isAuthenticated": request.user.is_authenticated,
         }
     )
-
-
-# @csrf_protect
-# @api_view(["POST"])
-# def sync_user_data(request):
-#     user = request.user
-#     if not user.is_authenticated:
-#         return Response(
-#             {"message": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED
-#         )
-
-#     # Get favorites and cart data from request
-#     favorites_data = request.data.get("favorites", [])
-#     cart_data = request.data.get("cart", [])
-
-#     # Sync favorites
-#     favorite_ids = [item["id"] for item in favorites_data]
-#     existing_favorites = set(
-#         Favorite.objects.filter(user=user, shoe_id__in=favorite_ids).values_list(
-#             "shoe_id", flat=True
-#         )
-#     )
-
-#     for shoe_id in favorite_ids:
-#         if shoe_id not in existing_favorites:
-#             Favorite.objects.create(user=user, shoe_id=shoe_id)
-
-#     Favorite.objects.filter(user=user).exclude(shoe_id__in=favorite_ids).delete()
-
-#     # Sync cart items
-#     cart_item_dict = {item.shoe_id: item for item in Cart.objects.filter(user=user)}
-
-#     for item in cart_data:
-#         shoe_id = item["id"]
-#         quantity = item.get("quantity", 1)
-
-#         if shoe_id in cart_item_dict:
-#             cart_item = cart_item_dict[shoe_id]
-#             if cart_item.quantity != quantity:
-#                 cart_item.quantity = quantity
-#                 cart_item.save()
-#         else:
-#             Cart.objects.create(user=user, shoe_id=shoe_id, quantity=quantity)
-
-#     to_delete = Cart.objects.filter(user=user).exclude(
-#         shoe_id__in=[item["id"] for item in cart_data]
-#     )
-#     print("Items to be deleted from cart:", to_delete)
-
-#     # Perform deletion
-#     to_delete.delete()
-
-#     # Get full URLs for images
-#     def get_full_image_url(image_path):
-#         return request.build_absolute_uri(settings.MEDIA_URL + image_path)
-
-#     # Fetch shoe details and ensure image URLs are complete
-#     favorite_shoes = Shoe.objects.filter(id__in=favorite_ids).values(
-#         "id", "name", "price", "image"
-#     )
-#     favorite_shoes = [
-#         {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in favorite_shoes
-#     ]
-
-#     cart_shoes = Shoe.objects.filter(id__in=[item["id"] for item in cart_data]).values(
-#         "id", "name", "price", "image", "brand", "color", "type"
-#     )
-#     cart_shoes = [
-#         {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in cart_shoes
-#     ]
-
-#     return Response(
-#         {
-#             "message": "Sync successful",
-#             "favorites": favorite_shoes,
-#             "cart": cart_shoes,
-#         },
-#         status=status.HTTP_200_OK,
-#     )
 
 
 @csrf_protect
@@ -262,4 +185,46 @@ def sync_user_data(request):
             "cart": cart_shoes,
         },
         status=status.HTTP_200_OK,
+    )
+
+
+@api_view(["GET"])
+def fetch_user_data(request):
+    user = request.user
+    if not user.is_authenticated:
+        return Response(
+            {"message": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED
+        )
+
+    # Get user's favorites
+    favorites = Shoe.objects.filter(favorite__user=user)
+    favorites_data = [
+        {
+            "id": shoe.id,
+            "name": shoe.name,
+            "price": shoe.price,
+            "image": request.build_absolute_uri(shoe.image.url),
+        }
+        for shoe in favorites
+    ]
+
+    # Get user's cart items
+    cart_items = Cart.objects.filter(user=user).select_related("shoe")
+    cart_data = [
+        {
+            "id": item.shoe.id,
+            "name": item.shoe.name,
+            "price": item.shoe.price,
+            "image": item.shoe.image.url,
+            "quantity": item.quantity,
+            "brand": item.shoe.brand,
+            "color": item.shoe.color,
+            "type": item.shoe.type,
+            "image": request.build_absolute_uri(item.shoe.image.url),
+        }
+        for item in cart_items
+    ]
+
+    return Response(
+        {"favorites": favorites_data, "cart": cart_data}, status=status.HTTP_200_OK
     )
