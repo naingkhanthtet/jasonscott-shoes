@@ -4,8 +4,9 @@ import { StyledTextarea } from "../CustomComponents/FormComponents";
 import { Box, Typography, IconButton } from "@mui/material";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import validationSchema from "./validationSchema";
+import registerValidationSchema from "./registerValidationSchema";
 import { useFormik } from "formik";
+import axiosInstance from "../../interceptors/axiosInstance";
 
 const RegisterForm: React.FC<{ onToggleUser: () => void }> = ({
   onToggleUser,
@@ -15,14 +16,23 @@ const RegisterForm: React.FC<{ onToggleUser: () => void }> = ({
 
   const formik = useFormik({
     initialValues: {
-      email: "",
       username: "",
+      email: "",
       password: "",
       re_password: "",
     },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.table(values);
+    validationSchema: registerValidationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await axiosInstance.post(`/auth/register/`, values);
+        if (response.status >= 200 && response.status <= 300) {
+          window.location.reload();
+          alert(response.data.message);
+        }
+      } catch (err) {
+        console.error("Registeration error: ", err);
+        alert("Something went wrong.");
+      }
     },
   });
 
@@ -142,7 +152,7 @@ const RegisterForm: React.FC<{ onToggleUser: () => void }> = ({
             fullWidth
           />
 
-          <StyledButton sx={{ marginTop: 3 }} fullWidth>
+          <StyledButton type="submit" sx={{ marginTop: 3 }} fullWidth>
             Register
           </StyledButton>
         </Box>
