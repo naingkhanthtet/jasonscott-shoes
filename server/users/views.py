@@ -160,22 +160,30 @@ def sync_user_data(request):
     print("Items to be deleted from cart:", items_to_delete)  # Debug print statement
     items_to_delete.delete()  # Perform the deletion
 
-    # Prepare response with updated favorites and cart data
-    def get_full_image_url(image_path):
-        return request.build_absolute_uri(settings.MEDIA_URL + image_path)
-
     favorite_shoes = Shoe.objects.filter(id__in=favorite_ids).values(
         "id", "name", "price", "image"
     )
     favorite_shoes = [
-        {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in favorite_shoes
+        {
+            **shoe,
+            "image": (
+                shoe["image"].url if hasattr(shoe["image"], "url") else shoe["image"]
+            ),
+        }
+        for shoe in favorite_shoes
     ]
 
     cart_shoes = Shoe.objects.filter(id__in=cart_item_ids).values(
         "id", "name", "price", "image", "brand", "color", "type"
     )
     cart_shoes = [
-        {**shoe, "image": get_full_image_url(shoe["image"])} for shoe in cart_shoes
+        {
+            **shoe,
+            "image": (
+                shoe["image"].url if hasattr(shoe["image"], "url") else shoe["image"]
+            ),
+        }
+        for shoe in cart_shoes
     ]
 
     return Response(
