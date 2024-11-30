@@ -74,7 +74,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         open={openDrawer}
         onClose={handleDrawerClose}
         PaperProps={{
-          style: { width: "300px", padding: "20px" },
+          style: { width: "350px", padding: "20px" },
         }}
       >
         <IconButton

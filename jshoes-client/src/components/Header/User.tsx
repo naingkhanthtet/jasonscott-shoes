@@ -29,7 +29,7 @@ const User: React.FC = () => {
         onClose={handleCloseClick}
         PaperProps={{
           style: {
-            width: "500px",
+            width: "350px",
             padding: "20px",
           },
         }}
