@@ -183,7 +183,7 @@ CSRF_TRUSTED_ORIGINS += config("CSRF_TRUSTED_ORIGINS").split()
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ORIGINS = [
-    "http://locahost:5173",
+    "http://localhost:5173",
 ]
 CORS_ALLOW_ORIGINS += config("CORS_ALLOWED_ORIGINS").split()
 
