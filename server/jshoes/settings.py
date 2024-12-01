@@ -177,12 +177,15 @@ CSRF_COOKIE_SECURE = True
 # CSRF_COOKIE_SAMESITE = "Strict"
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
     "http://localhost:5173",
 ]
+CSRF_TRUSTED_ORIGINS += config("CSRF_TRUSTED_ORIGINS").split()
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGIN = [config("CORS_ALLOWED_ORIGIN")]
+CORS_ALLOW_ORIGINS = [
+    "http://locahost:5173",
+]
+CORS_ALLOW_ORIGINS += config("CORS_ALLOWED_ORIGIN").split()
 
 
 MEDIA_URL = "/media/"
