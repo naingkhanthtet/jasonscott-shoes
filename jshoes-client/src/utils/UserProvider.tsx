@@ -221,6 +221,24 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await axiosInstance.delete("/auth/delete-user/", {
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
+      });
+      if (response.status === 200) {
+        Cookies.remove("favorites");
+        Cookies.remove("cart");
+        window.location.reload();
+        alert(response.data.message);
+      }
+    } catch (err: any) {
+      alert(err.response.data.error);
+    }
+  };
+
   useEffect(() => {
     checkAuthStatus();
   }, []);
@@ -236,13 +254,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         user,
         setUser,
-        handleAddToCart,
-        handleRemoveFromCart,
-        handleAddFavorites,
-        handleQuantityChange,
-        handleRemoveFavorites,
-        handleLogout,
         syncUserData,
+        handleAddFavorites,
+        handleRemoveFavorites,
+        handleAddToCart,
+        handleQuantityChange,
+        handleRemoveFromCart,
+        handleLogout,
+        handleDeleteAccount,
       }}
     >
       {isInitialized ? children : null}

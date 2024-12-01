@@ -18,6 +18,7 @@ export interface UserContextProps {
   handleQuantityChange: (itemId: number, quantity: number) => void;
   handleAddFavorites: (favoriteItem: Shoe) => void;
   handleRemoveFavorites: (itemId: number) => void;
+  handleDeleteAccount: () => void;
 }
 
 export const UserContext = createContext<UserContextProps | undefined>(
