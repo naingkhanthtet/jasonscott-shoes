@@ -31,15 +31,9 @@ cloudinary.config(
     secure=True,
 )
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
-# DEBUG = config("DEBUG")
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -47,9 +41,7 @@ ALLOWED_HOSTS = [
 ]
 ALLOWED_HOSTS += config("ALLOWED_HOSTS").split()
 
-
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -100,18 +92,18 @@ WSGI_APPLICATION = "jshoes.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {"default": dj_database_url.parse(config("POSTGRES_URL"))}
+DATABASES = {"default": dj_database_url.parse(config("POSTGRES_URL"))}
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("POSTGRES_DB"),
-        "USER": config("POSTGRES_USER"),
-        "PASSWORD": config("POSTGRES_PASSWORD"),
-        "HOST": config("POSTGRES_HOST", "db"),
-        "PORT": config("POSTGRES_PORT", "5432", cast=int),
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": config("POSTGRES_DB"),
+#         "USER": config("POSTGRES_USER"),
+#         "PASSWORD": config("POSTGRES_PASSWORD"),
+#         "HOST": config("POSTGRES_HOST", "db"),
+#         "PORT": config("POSTGRES_PORT", "5432", cast=int),
+#     }
+# }
 
 
 # Password validation
@@ -174,28 +166,23 @@ SECURE_HSTS_PRELOAD = True
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
-# SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = False
 # SESSION_COOKIE_SAMESITE = "Strict"
 SESSION_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_HTTPONLY = True
 
-# CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = False
 # CSRF_COOKIE_SAMESITE = "Strict"
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
-    "http://localhost:8000",
-    "http://127.0.0.1",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^http://localhost:\d+$",
-    r"^http://127.0.0.1:\d+$",
-]
+CORS_ALLOWED_ORIGIN = [config("CORS_ALLOWED_ORIGIN")]
 
 
 MEDIA_URL = "/media/"
