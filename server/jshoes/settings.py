@@ -38,8 +38,9 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    config("FRONTEND_URL"),
+    config("BACKEND_URL"),
 ]
-ALLOWED_HOSTS += config("ALLOWED_HOSTS").split()
 
 # Application definition
 INSTALLED_APPS = [
