@@ -178,14 +178,16 @@ CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    config("FRONTEND_URL"),
+    config("BACKEND_URL"),
 ]
-CSRF_TRUSTED_ORIGINS += config("CSRF_TRUSTED_ORIGINS").split()
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ORIGINS = [
     "http://localhost:5173",
+    config("FRONTEND_URL"),
+    config("BACKEND_URL"),
 ]
-CORS_ALLOW_ORIGINS += config("CORS_ALLOWED_ORIGINS").split()
 
 
 MEDIA_URL = "/media/"
