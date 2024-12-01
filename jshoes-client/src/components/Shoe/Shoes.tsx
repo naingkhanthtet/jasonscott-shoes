@@ -6,7 +6,7 @@ import {
   WrapContainer,
 } from "../CustomComponents/BasicComponents";
 import { PaginationDropdown } from "../CustomComponents/ShoeComponents";
-import { MenuItem } from "@mui/material";
+import { MenuItem, Typography } from "@mui/material";
 import Shoe from "../../types/Shoe";
 
 interface ShoesProps {
@@ -56,6 +56,10 @@ const Shoes: React.FC<ShoesProps> = ({ selectedFilters }) => {
     return matchesBrand && matchesColor && matchesType && matchesGender;
   });
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedFilters]);
+
   const totalPages = Math.ceil(filteredShoes.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentShoes = filteredShoes.slice(
@@ -68,52 +72,60 @@ const Shoes: React.FC<ShoesProps> = ({ selectedFilters }) => {
 
   return (
     <>
-      <ContentWidth>
-        <WrapContainer
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "repeat(2, 1fr)",
-              sm: "repeat(3, 1fr)",
-              lg: "repeat(5, 1fr)",
-            },
-            gap: "20px",
-            justifyItems: "center",
-          }}
-        >
-          {currentShoes.map((shoe) => (
-            <ShoeCard
-              key={shoe.id}
-              id={shoe.id}
-              name={shoe.name}
-              price={shoe.price}
-              image={shoe.image}
-            />
-          ))}
-        </WrapContainer>
-      </ContentWidth>
-      <ContentWidth
-        sx={{
-          justifyContent: "center",
-          display: "flex",
-          gap: "10px",
-        }}
-      >
-        <span>
-          Page
-          <PaginationDropdown
-            value={currentPage}
-            onChange={(e) => setCurrentPage(Number(e.target.value))}
+      {currentShoes.length === 0 ? (
+        <ContentWidth>
+          <Typography variant="h5">There are no shoes</Typography>
+        </ContentWidth>
+      ) : (
+        <>
+          <ContentWidth>
+            <WrapContainer
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "repeat(2, 1fr)",
+                  sm: "repeat(3, 1fr)",
+                  lg: "repeat(5, 1fr)",
+                },
+                gap: "20px",
+                justifyItems: "center",
+              }}
+            >
+              {currentShoes.map((shoe) => (
+                <ShoeCard
+                  key={shoe.id}
+                  id={shoe.id}
+                  name={shoe.name}
+                  price={shoe.price}
+                  image={shoe.image}
+                />
+              ))}
+            </WrapContainer>
+          </ContentWidth>
+          <ContentWidth
+            sx={{
+              justifyContent: "center",
+              display: "flex",
+              gap: "10px",
+            }}
           >
-            {Array.from({ length: totalPages }, (_, index) => (
-              <MenuItem key={index + 1} value={index + 1}>
-                {index + 1}
-              </MenuItem>
-            ))}
-          </PaginationDropdown>
-          of {totalPages}
-        </span>
-      </ContentWidth>
+            <span>
+              Page
+              <PaginationDropdown
+                value={currentPage}
+                onChange={(e) => setCurrentPage(Number(e.target.value))}
+              >
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <MenuItem key={index + 1} value={index + 1}>
+                    {index + 1}
+                  </MenuItem>
+                ))}
+              </PaginationDropdown>
+              of {totalPages}
+            </span>
+          </ContentWidth>
+        </>
+      )}
     </>
   );
 };
