@@ -185,7 +185,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ORIGINS = [
     "http://locahost:5173",
 ]
-CORS_ALLOW_ORIGINS += config("CORS_ALLOWED_ORIGIN").split()
+CORS_ALLOW_ORIGINS += config("CORS_ALLOWED_ORIGINS").split()
 
 
 MEDIA_URL = "/media/"
