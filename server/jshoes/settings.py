@@ -184,7 +184,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ORIGINS = [
+CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     config("FRONTEND_URL"),
     config("BACKEND_URL"),
