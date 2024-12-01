@@ -179,6 +179,7 @@ CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    config("LOCAL_SERVER"),
     config("FRONTEND_URL"),
     config("BACKEND_URL"),
 ]
@@ -186,6 +187,7 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    config("LOCAL_SERVER"),
     config("FRONTEND_URL"),
     config("BACKEND_URL"),
 ]
