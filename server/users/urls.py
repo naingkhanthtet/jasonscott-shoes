@@ -7,6 +7,8 @@ from .views import (
     sync_user_data,
     csrf_token_view,
     fetch_user_data,
+    change_password,
+    delete_user,
 )
 
 urlpatterns = [
@@ -17,4 +19,6 @@ urlpatterns = [
     path("user/", get_user, name="get_user"),
     path("sync/", sync_user_data, name="sync_user_data"),
     path("user-data/", fetch_user_data, name="fetch_user_data"),
+    path("change-pw/", change_password, name="change_password"),
+    path("delete-user/", delete_user, name="delete_user"),
 ]

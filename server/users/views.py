@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
@@ -9,6 +10,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from shop.models import Cart, Favorite, Shoe
+import json
 
 
 @ensure_csrf_cookie
@@ -71,7 +73,7 @@ def login_view(request):
             # Call sync function with the cookie data
             sync_user_data(request)
         response = JsonResponse({"message": "Login success"}, status=status.HTTP_200_OK)
-        response.set_cookie("csrftoken", csrf_token, httponly=True, samesite="Lax")
+        response.set_cookie("csrftoken", csrf_token, httponly=True)
         return response
     else:
         return JsonResponse(
@@ -236,3 +238,46 @@ def fetch_user_data(request):
     return Response(
         {"favorites": favorites_data, "cart": cart_data}, status=status.HTTP_200_OK
     )
+
+
+@csrf_protect
+@api_view(["POST"])
+def change_password(request):
+    try:
+        old_password = request.data.get("old_password")
+        new_password = request.data.get("new_password")
+        user = request.user
+
+        if not user.check_password(old_password):
+            return JsonResponse(
+                {"error": "Old password is not correct"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if old_password == new_password:
+            return JsonResponse(
+                {"error": "You cannot use old password to change"},
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+            )
+
+        user.set_password(new_password)
+        user.save()
+        update_session_auth_hash(request, user)
+        return JsonResponse(
+            {"message": "Password changed successfully"}, status=status.HTTP_200_OK
+        )
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_protect
+@api_view(["DELETE"])
+def delete_user(request):
+    try:
+        user = request.user
+        user.delete()
+        return JsonResponse(
+            {"message": "Account deleted successfully"}, status=status.HTTP_200_OK
+        )
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
