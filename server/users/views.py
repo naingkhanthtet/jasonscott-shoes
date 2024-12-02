@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from shop.models import Cart, Favorite, Shoe
-import json
+from decouple import config
 
 
 @ensure_csrf_cookie
@@ -57,8 +57,8 @@ def register_view(request):
 @permission_classes([AllowAny])
 def login_view(request):
     # clear existing session data
-    if request.user.is_authenticated:
-        request.session.flush()
+    # if request.user.is_authenticated:
+    #     request.session.flush()
 
     username = request.data.get("username")
     password = request.data.get("password")
@@ -73,6 +73,15 @@ def login_view(request):
             # Call sync function with the cookie data
             sync_user_data(request)
         response = JsonResponse({"message": "Login success"}, status=status.HTTP_200_OK)
+        response.set_cookie(
+            "sessionid",
+            request.session.session_key,
+            httponly=True,
+            secure=True,
+            samesite="None",
+            domain=config("ALLOWED_HOST_BACKEND"),
+            max_age=1209600,
+        )
         response.set_cookie("csrftoken", csrf_token, httponly=True)
         return response
     else:
