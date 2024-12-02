@@ -8,7 +8,14 @@ const pwChangeValidationSchema = Yup.object({
     .matches(/[A-Z]/, "Must contain an uppercase letter")
     .matches(/[a-z]/, "Must contain a lowercase letter")
     .matches(/\d/, "Must contain a number")
-    .matches(/[!@#$%^&*]/, "Must contain a special character"),
+    .matches(/[!@#$%^&*]/, "Must contain a special character")
+    .test(
+      "not-same-as-old-password",
+      "New password cannot be the same as the old password",
+      function (value) {
+        return value !== this.parent.old_password;
+      }
+    ),
   re_password: Yup.string()
     .oneOf([Yup.ref("new_password"), undefined], "Passwords must match")
     .required("Please re-enter your password"),
