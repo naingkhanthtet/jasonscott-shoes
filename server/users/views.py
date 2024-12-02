@@ -100,6 +100,7 @@ def logout_view(request):
 
 @csrf_protect
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def get_user(request):
     return JsonResponse(
         {
