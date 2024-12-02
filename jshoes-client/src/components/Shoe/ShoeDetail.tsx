@@ -22,7 +22,7 @@ const ShoeDetail: React.FC = () => {
 
   useEffect(() => {
     axiosInstance
-      .get(`/shop/shoes/${id}`)
+      .get(`/shop/shoes/${id}/`)
       .then((response) => {
         setShoe(response.data);
         setLoading(false);

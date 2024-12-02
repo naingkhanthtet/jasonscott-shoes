@@ -88,7 +88,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     if (isCartDifferent || isFavoritesDifferent) {
       try {
         await axiosInstance.post(
-          "auth/sync/",
+          "/auth/sync/",
           {
             favorites: user.favorites,
             cart: user.cart,
