@@ -5,6 +5,7 @@ import { Box, Typography, IconButton } from "@mui/material";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import axiosInstance from "../../interceptors/axiosInstance";
+import useCsrfToken from "../../utils/useCsrfToken";
 
 interface LoginFormProps {
   onToggleUser: () => void;
@@ -15,16 +16,25 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggleUser }) => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>("");
+  const csrfToken = useCsrfToken();
 
   const handlePasswordView = () => setShowPassword(!showPassword);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/auth/login/", {
-        username,
-        password,
-      });
+      const response = await axiosInstance.post(
+        "/auth/login/",
+        {
+          username,
+          password,
+        },
+        {
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+        }
+      );
 
       if (response.status === 200) {
         alert("Login successful!");
