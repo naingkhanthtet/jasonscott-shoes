@@ -73,6 +73,9 @@ def login_view(request):
             sync_user_data(request)
         response = JsonResponse({"message": "Login success"}, status=status.HTTP_200_OK)
         response.set_cookie("csrftoken", csrf_token, httponly=True)
+
+        print(request.session.items())
+        print(response.cookies)
         return response
     else:
         return JsonResponse(
