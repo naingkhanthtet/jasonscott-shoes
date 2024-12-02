@@ -209,7 +209,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleLogout = async () => {
     try {
-      const response = await axiosInstance.get("auth/logout");
+      const response = await axiosInstance.get("/auth/logout");
       if (response.status === 200) {
         setUser(defaultUser);
         Cookies.remove("favorites");

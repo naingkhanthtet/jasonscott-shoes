@@ -7,7 +7,7 @@ const useCsrfToken = () => {
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
-        const response = await axiosInstance.get("auth/csrf");
+        const response = await axiosInstance.get("/auth/csrf/");
         setCsrfToken(response.data.csrfToken);
       } catch (err) {
         console.error("Failed to fetch csrf token", err);
