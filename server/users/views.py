@@ -57,8 +57,8 @@ def register_view(request):
 @permission_classes([AllowAny])
 def login_view(request):
     # clear existing session data
-    if request.user.is_authenticated:
-        request.session.flush()
+    # if request.user.is_authenticated:
+    #     request.session.flush()
 
     username = request.data.get("username")
     password = request.data.get("password")
