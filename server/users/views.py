@@ -72,15 +72,6 @@ def login_view(request):
             # Call sync function with the cookie data
             sync_user_data(request)
         response = JsonResponse({"message": "Login success"}, status=status.HTTP_200_OK)
-        response.set_cookie(
-            "sessionid",
-            request.session.session_key,
-            httponly=True,
-            secure=True,
-            samesite="None",
-            domain=config("ALLOWED_HOST_BACKEND"),
-            max_age=1209600,
-        )
         response.set_cookie("csrftoken", csrf_token, httponly=True)
         return response
     else:
