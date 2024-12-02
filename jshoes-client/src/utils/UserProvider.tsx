@@ -25,6 +25,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const checkAuthStatus = async () => {
     try {
       const response = await axiosInstance.get("/auth/user/");
+      console.log("Full user response:", response.data);
       setUser((prev) => ({
         ...prev,
         isLoggedIn: response.data.isAuthenticated,

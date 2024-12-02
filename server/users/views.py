@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from shop.models import Cart, Favorite, Shoe
 from decouple import config
+import logging
 
 
 @ensure_csrf_cookie
@@ -105,6 +106,10 @@ def logout_view(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_user(request):
+    logger = logging.getLogger(__name__)
+    logger.info(f"User authentication status: {request.user.is_authenticated}")
+    logger.info(f"User: {request.user}")
+    logger.info(f"Session: {request.session.items()}")
     return JsonResponse(
         {
             "username": request.user.username if request.user.is_authenticated else "",
