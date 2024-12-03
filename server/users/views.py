@@ -1,21 +1,13 @@
-from django.conf import settings
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth import authenticate, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
-from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_protect
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from shop.models import Cart, Favorite, Shoe
-from decouple import config
-import logging
-
-
-@ensure_csrf_cookie
-def csrf_token_view(request):
-    return JsonResponse({"csrfToken": get_token(request)})
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @csrf_protect
@@ -25,12 +17,7 @@ def register_view(request):
     email = request.data.get("email")
     username = request.data.get("username")
     password = request.data.get("password")
-    re_password = request.data.get("re_password")
 
-    if password != re_password:
-        return Response(
-            {"message": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST
-        )
     if User.objects.filter(username=username).exists():
         return Response({"message": "user exists"}, status=status.HTTP_400_BAD_REQUEST)
     if User.objects.filter(email=email).exists():
@@ -40,7 +27,9 @@ def register_view(request):
         )
 
     user = User.objects.create_user(email=email, username=username, password=password)
-    login(request._request, user)
+
+    refresh = RefreshToken.for_user(user)
+    tokens = {"refresh": str(refresh), "access": str(refresh.access_token)}
 
     # Sync data after registration if cookies data is available
     if request.data.get("favorites") or request.data.get("cart"):
@@ -48,7 +37,8 @@ def register_view(request):
         # Call sync function with the cookie data
         sync_user_data(request)
     return Response(
-        {"message": "Registration successful"}, status=status.HTTP_201_CREATED
+        {"message": "Registration successful", "tokens": tokens},
+        status=status.HTTP_201_CREATED,
     )
 
 
@@ -56,60 +46,30 @@ def register_view(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login_view(request):
-    # clear existing session data
-    # if request.user.is_authenticated:
-    #     request.session.flush()
-
     username = request.data.get("username")
     password = request.data.get("password")
     user = authenticate(username=username, password=password)
 
     if user is not None:
-        login(request, user)
-        csrf_token = get_token(request)
+        refresh = RefreshToken.for_user(user)
+        tokens = {"refresh": str(refresh), "access": str(refresh.access_token)}
 
         if request.data.get("favorites") or request.data.get("cart"):
             request.user = user
             # Call sync function with the cookie data
             sync_user_data(request)
-        response = JsonResponse({"message": "Login success"}, status=status.HTTP_200_OK)
-        response.set_cookie("csrftoken", csrf_token, httponly=True)
-
-        print(request.session.items())
-        print(response.cookies)
-        return response
+        return JsonResponse(
+            {"message": "Login successful", "tokens": tokens}, status=status.HTTP_200_OK
+        )
     else:
         return JsonResponse(
             {"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST
         )
 
 
-@csrf_protect
-@api_view(["GET"])
-def logout_view(request):
-    if request.user.is_authenticated:
-        # request.user.auth_token.delete()
-        request.session.flush()
-        logout(request)
-        response = JsonResponse(
-            {"message": "Logout successful"}, status=status.HTTP_200_OK
-        )
-        response.delete_cookie("sessionid", samesite="Lax")
-        response.delete_cookie("csrftoken", samesite="Lax")
-        return response
-    return JsonResponse(
-        {"message": "Not logged in"}, status=status.HTTP_400_BAD_REQUEST
-    )
-
-
-@csrf_protect
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_user(request):
-    logger = logging.getLogger(__name__)
-    logger.info(f"User authentication status: {request.user.is_authenticated}")
-    logger.info(f"User: {request.user}")
-    logger.info(f"Session: {request.session.items()}")
     return JsonResponse(
         {
             "username": request.user.username if request.user.is_authenticated else "",
@@ -167,7 +127,6 @@ def sync_user_data(request):
 
     # Delete items in backend that aren't in the incoming `cart_data`
     items_to_delete = Cart.objects.filter(user=user).exclude(shoe_id__in=cart_item_ids)
-    print("Items to be deleted from cart:", items_to_delete)  # Debug print statement
     items_to_delete.delete()  # Perform the deletion
 
     favorite_shoes = Shoe.objects.filter(id__in=favorite_ids).values(
