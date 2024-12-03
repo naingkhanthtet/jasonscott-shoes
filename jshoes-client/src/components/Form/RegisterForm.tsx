@@ -26,8 +26,10 @@ const RegisterForm: React.FC<{ onToggleUser: () => void }> = ({
       try {
         const response = await axiosInstance.post(`/auth/register/`, values);
         if (response.status >= 200 && response.status <= 300) {
-          window.location.reload();
+          localStorage.setItem("refresh_token", response.data.tokens.refresh);
+          localStorage.setItem("access_token", response.data.tokens.access);
           alert(response.data.message);
+          window.location.reload();
         }
       } catch (err) {
         console.error("Registeration error: ", err);
