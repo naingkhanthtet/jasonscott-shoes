@@ -23,8 +23,8 @@ const CheckoutForm: React.FC = () => {
       paymentOption: "",
     },
     validationSchema: checkoutValidationSchema,
-    onSubmit: (values) => {
-      console.table(values);
+    onSubmit: () => {
+      alert("Cool, can you buy me them?");
     },
   });
 
@@ -46,16 +46,6 @@ const CheckoutForm: React.FC = () => {
           helperText={
             formik.touched.email && formik.dirty && formik.errors.email
           }
-          /*
-          error={
-              formik.touched.email &&
-              formik.dirty &&
-              Boolean(formik.errors.email)
-            }
-            helperText={
-              formik.touched.email && formik.dirty && formik.dirty && formik.errors.email
-            }
-          */
         />
 
         {/* First Name */}
@@ -235,7 +225,7 @@ const CheckoutForm: React.FC = () => {
 
         {/* Submit Button */}
         <StyledButton fullWidth sx={{ marginTop: 3 }}>
-          Submit
+          Finish Checkout
         </StyledButton>
       </Box>
     </form>
