@@ -7,7 +7,6 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import pwChangeValidationSchema from "./pwChangeValidationSchema";
 import { useFormik } from "formik";
 import axiosInstance from "../../interceptors/axiosInstance";
-import useCsrfToken from "../../utils/useCsrfToken";
 
 const PasswordChangeForm: React.FC<{ onToggle: () => void }> = ({
   onToggle,
@@ -15,7 +14,6 @@ const PasswordChangeForm: React.FC<{ onToggle: () => void }> = ({
   const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
-  const csrfToken = useCsrfToken();
 
   const formik = useFormik({
     initialValues: {
@@ -26,11 +24,7 @@ const PasswordChangeForm: React.FC<{ onToggle: () => void }> = ({
     validationSchema: pwChangeValidationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axiosInstance.post(`/auth/change-pw/`, values, {
-          headers: {
-            "X-CSRFToken": csrfToken,
-          },
-        });
+        const response = await axiosInstance.post(`/auth/change-pw/`, values);
         if (response.status >= 200 && response.status <= 300) {
           window.location.reload();
           alert(response.data.message);
