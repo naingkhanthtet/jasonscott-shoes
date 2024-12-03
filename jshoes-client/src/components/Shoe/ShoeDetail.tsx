@@ -34,8 +34,8 @@ const ShoeDetail: React.FC = () => {
       });
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <ContentWidth>Loading...</ContentWidth>;
+  if (error) return <ContentWidth>{error}</ContentWidth>;
 
   return (
     <>

@@ -67,8 +67,8 @@ const Shoes: React.FC<ShoesProps> = ({ selectedFilters }) => {
     startIndex + itemsPerPage
   );
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <ContentWidth>Loading...</ContentWidth>;
+  if (error) return <ContentWidth>{error}</ContentWidth>;
 
   return (
     <>
