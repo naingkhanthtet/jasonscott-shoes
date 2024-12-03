@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Cookies from "js-cookie";
 import axiosInstance from "../interceptors/axiosInstance";
-import useCsrfToken from "./useCsrfToken";
 import { User, UserContext } from "./UserContext";
 import Shoe from "../types/Shoe";
 
@@ -20,12 +19,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isInitialized, setIsInitialized] = useState(false);
   const [backendFavorites, setBackendFavorites] = useState<Shoe[]>([]);
   const [backendCart, setBackendCart] = useState<Shoe[]>([]);
-  const csrfToken = useCsrfToken();
 
   const checkAuthStatus = async () => {
     try {
       const response = await axiosInstance.get("/auth/user/");
-      console.log("Full user response:", response.data);
       setUser((prev) => ({
         ...prev,
         isLoggedIn: response.data.isAuthenticated,
@@ -54,6 +51,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  /*
+  fetch user data after the success of authentication process
+  */
   const fetchUserData = async () => {
     try {
       const response = await axiosInstance.get("/auth/user-data/");
@@ -88,19 +88,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     // sync if the values are different
     if (isCartDifferent || isFavoritesDifferent) {
       try {
-        await axiosInstance.post(
-          "/auth/sync/",
-          {
-            favorites: user.favorites,
-            cart: user.cart,
-          },
-          {
-            headers: {
-              "X-CSRFToken": csrfToken,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        await axiosInstance.post("/auth/sync/", {
+          favorites: user.favorites,
+          cart: user.cart,
+        });
         setBackendFavorites(user.favorites);
         setBackendCart(user.cart);
         console.log("Sync successful");
@@ -114,7 +105,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     user.cart,
     backendFavorites,
     backendCart,
-    csrfToken,
   ]);
 
   // Debounce the sync operation
@@ -209,29 +199,26 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleLogout = async () => {
-    try {
-      const response = await axiosInstance.get("/auth/logout");
-      if (response.status === 200) {
-        setUser(defaultUser);
-        Cookies.remove("favorites");
-        Cookies.remove("cart");
-        window.location.reload();
-      }
-    } catch (err) {
-      console.error("Logout failed", err);
+    const refreshToken = localStorage.getItem("refresh_token");
+    const accessToken = localStorage.getItem("access_token");
+    if (refreshToken || accessToken) {
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("access_token");
+      alert("Use is logged out");
+      window.location.reload();
+    } else {
+      alert("User is already logged out.");
     }
   };
 
   const handleDeleteAccount = async () => {
     try {
-      const response = await axiosInstance.delete("/auth/delete-user/", {
-        headers: {
-          "X-CSRFToken": csrfToken,
-        },
-      });
+      const response = await axiosInstance.delete("/auth/delete-user/");
       if (response.status === 200) {
         Cookies.remove("favorites");
         Cookies.remove("cart");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
         window.location.reload();
         alert(response.data.message);
       }
