@@ -14,13 +14,13 @@ import os
 from pathlib import Path
 from decouple import config
 import dj_database_url
+from datetime import timedelta
 
 # cloudinary imports
 import cloudinary
 import cloudinary.api
 import cloudinary.uploader
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # cloudinary config
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "corsheaders",
     "cloudinary",
     "shop",
@@ -89,10 +90,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "jshoes.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {"default": dj_database_url.parse(config("POSTGRES_URL"))}
 
 # DATABASES = {
@@ -105,10 +102,6 @@ DATABASES = {"default": dj_database_url.parse(config("POSTGRES_URL"))}
 #         "PORT": config("POSTGRES_PORT", "5432", cast=int),
 #     }
 # }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -125,10 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -137,45 +126,39 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = "static/"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        # Cookie-based authentication
-        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
 }
 
-SECURE_SSL_REDIRECT = True
+# SECURE_SSL_REDIRECT = True
 
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
+
+# SESSION_COOKIE_SECURE = False
+# SESSION_COOKIE_SAMESITE = "Lax"
+# CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_SAMESITE = "Lax"
+
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
-SESSION_COOKIE_SECURE = True
-# SESSION_COOKIE_SECURE = False
-# SESSION_COOKIE_SAMESITE = "Strict"
-SESSION_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = False
-# CSRF_COOKIE_SAMESITE = "Strict"
 CSRF_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
@@ -184,6 +167,14 @@ CSRF_TRUSTED_ORIGINS = [
     config("FRONTEND_URL"),
     config("BACKEND_URL"),
 ]
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=20),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
